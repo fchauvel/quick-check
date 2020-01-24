@@ -1,0 +1,49 @@
+{
+    "name": "@fchauvel/quick-check",
+    "version": "0.1.0",
+    "description": "Internal DSL to check and convert JSON structures",
+    "main": "build/index.js",
+    "scripts": {
+	"test": "jest"
+    },
+    "repository": {
+	"type": "git",
+	"url": "git+ssh://git@github.com/fchauvel/quick-check.git"
+    },
+    "keywords": [
+	"JSON",
+	"YAML",
+	"schemas",
+	"type-checking",
+	"convertion"
+    ],
+    "author": "Franck Chauvel",
+    "license": "MIT",
+    "bugs": {
+	"url": "https://github.com/fchauvel/quick-check/issues"
+    },
+    "homepage": "https://github.com/fchauvel/quick-check#readme",
+    "devDependencies": {
+	"@types/jest": "^24.9.0",
+	"babel-jest": "^25.1.0",
+	"jest": "^25.1.0",
+	"ts-jest": "^25.0.0"
+    },
+    "dependencies": {
+	"@types/node": "^13.1.8",
+	"typescript": "^3.7.5"
+    },
+    "jest": {
+	"preset": "ts-jest",
+	"roots": [
+	    "<rootDir>/src",
+	    "<rootDir>/tests"
+	],
+	"modulePaths": [
+	    "."
+	],
+	"collectCoverageFrom": [
+	    "src/**/*.ts"
+	]
+    }
+}
