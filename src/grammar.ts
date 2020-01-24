@@ -106,16 +106,19 @@ class Parser<T> implements ast.Visitor {
 
     public visitString(definition: ast.StringType): void {
         this.ensureTypeIs("string", "expecting string!");
+        this._path.value = definition.convert(this._path.value);
     }
 
 
     public visitNumber(definition: ast.Number): void {
         this.ensureTypeIs("number", 0);
+        this._path.value = definition.convert(this._path.value);
     }
 
 
     public visitBoolean(definition: ast.Boolean): void {
         this.ensureTypeIs("boolean", false);
+        this._path.value = definition.convert(this._path.value);
     }
 
 
@@ -129,8 +132,9 @@ class Parser<T> implements ast.Visitor {
             results.push(this._path.value);
             this._path.exit();
         }
-        this._path.value = results;
+        this._path.value = definition.convert(results);
     }
+
 
     public visitUnion(definition: ast.Union): void {
         for (const anyType of definition.candidateTypes) {
@@ -167,7 +171,7 @@ class Parser<T> implements ast.Visitor {
                 this.reportIgnoredProperty(eachKey);
             }
         }
-        this._path.value = result;
+        this._path.value = definition.convert(result);
     }
 
 
@@ -217,6 +221,13 @@ export class Grammar {
         }
         this._declarations[name] = new dsl.TypeDeclaration(name);
         return this._declarations[name];
+    }
+
+    public on(name: string): dsl.TypeDeclaration {
+        if (name in this._declarations) {
+            return this._declarations[name];
+        }
+        throw new Error(`Unknown type named '${name}'`);
     }
 
 

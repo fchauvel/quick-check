@@ -13,22 +13,33 @@ import * as ast from "./ast";
 
 
 interface Builder<T> {
-    build (): T;
+    build(): T;
 }
 
 
-interface TypeBuilder<T extends ast.Type> extends Builder<T> {}
+abstract class TypeBuilder<T extends ast.Type> implements Builder<T> {
+
+    public converter: ast.Converter;
+
+    constructor() {
+        this.converter = (data: any) => { return data };
+    }
+
+    public abstract build(): T;
+
+}
 
 
 type TypeRef<T extends ast.Type> = string | TypeBuilder<T>;
 
 
 
-class ReferenceBuilder implements TypeBuilder<ast.Reference> {
+class ReferenceBuilder extends TypeBuilder<ast.Reference> {
 
     private _target: string;
 
     constructor(target: string) {
+        super();
         this._target = target;
     }
 
@@ -45,11 +56,12 @@ export function anObject(): ObjectBuilder {
 
 
 
-class ObjectBuilder implements TypeBuilder<ast.ObjectType> {
+class ObjectBuilder extends TypeBuilder<ast.ObjectType> {
 
     private _properties: PropertyBuilder[];
 
     constructor() {
+        super()
         this._properties = [];
     }
 
@@ -63,13 +75,13 @@ class ObjectBuilder implements TypeBuilder<ast.ObjectType> {
         for (const eachProperty of this._properties) {
             properties.push(eachProperty.build())
         }
-        return new ast.ObjectType(properties);
+        return new ast.ObjectType(properties, this.converter);
     }
 
 }
 
 
-export function aProperty(name: string): PropertyBuilder  {
+export function aProperty(name: string): PropertyBuilder {
     return new PropertyBuilder(name);
 }
 
@@ -95,12 +107,9 @@ class PropertyBuilder implements Builder<ast.Property> {
 
     public build(): ast.Property {
         return new ast.Property(this._name,
-                                this._type.build());
+            this._type.build());
     }
 }
-
-
-
 
 
 export function anArrayOf<T extends ast.Type>
@@ -113,17 +122,19 @@ export function anArrayOf<T extends ast.Type>
 
 
 
-
-class ArrayBuilder implements TypeBuilder<ast.ArrayType> {
+class ArrayBuilder extends TypeBuilder<ast.ArrayType> {
 
     private _contentType: TypeBuilder<any>;
 
-    constructor (contentType: TypeBuilder<any>) {
+    constructor(contentType: TypeBuilder<any>) {
+        super();
         this._contentType = contentType;
     }
 
     public build(): ast.ArrayType {
-        return new ast.ArrayType(this._contentType.build());
+        return new ast.ArrayType(
+            this._contentType.build(),
+            this.converter);
     }
 
 }
@@ -143,11 +154,12 @@ export function eitherOf(...candidates: TypeRef<any>[]): UnionBuilder {
 }
 
 
-class UnionBuilder implements TypeBuilder<ast.Union> {
+class UnionBuilder extends TypeBuilder<ast.Union> {
 
     private _candidateBuilders: TypeBuilder<any>[];
 
     constructor(candidateBuilders: TypeBuilder<any>[]) {
+        super();
         this._candidateBuilders = candidateBuilders;
     }
 
@@ -165,10 +177,10 @@ export function aString(): StringBuilder {
     return new StringBuilder();
 }
 
-class StringBuilder implements TypeBuilder<ast.StringType> {
+class StringBuilder extends TypeBuilder<ast.StringType> {
 
     public build(): ast.StringType {
-        return new ast.StringType();
+        return new ast.StringType(this.converter);
     }
 
 }
@@ -177,10 +189,10 @@ export function aNumber(): NumberBuilder {
     return new NumberBuilder();
 }
 
-class NumberBuilder implements TypeBuilder<ast.Number> {
+class NumberBuilder extends TypeBuilder<ast.Number> {
 
     public build(): ast.Number {
-        return new ast.Number();
+        return new ast.Number(this.converter);
     }
 
 }
@@ -189,23 +201,32 @@ export function aBoolean(): BooleanBuilder {
     return new BooleanBuilder();
 }
 
-class BooleanBuilder implements TypeBuilder<ast.Boolean> {
+class BooleanBuilder extends TypeBuilder<ast.Boolean> {
 
     public build(): ast.Boolean {
-        return new ast.Boolean();
+        return new ast.Boolean(this.converter);
     }
 
 }
 
 
+type Converter = (data: any) => any;
+
 export class TypeDeclaration {
 
     private _name: string;
-    private _type: TypeBuilder<any>;
+    private _builder: TypeBuilder<any>;
+    private _type: { isBuilt: boolean, result: ast.Type};
+    private _converter: Converter
 
-    constructor (name: string) {
+    constructor(name: string) {
         this._name = name;
-        this._type = new StringBuilder();
+        this._builder = new StringBuilder();
+        this._type = {
+            isBuilt:  false,
+            result: new ast.StringType()
+        };
+        this._converter = (o) => o;
     }
 
     public isNamed(name: string) {
@@ -213,12 +234,24 @@ export class TypeDeclaration {
     }
 
     public get type(): ast.Type {
-        return this._type.build();
+        if (!this._type.isBuilt) {
+            this._type.result = this._builder.build();
+            this._type.isBuilt = true;
+        }
+        return this._type.result;
     }
 
     public as(type: TypeBuilder<any>): TypeDeclaration {
-        this._type = type;
+        this._builder = type;
         return this;
+    }
+
+    public apply(converter: Converter) {
+        this._builder.converter = converter;
+    }
+
+    public convert(data: any): any {
+        return this._converter(data);
     }
 
 }
