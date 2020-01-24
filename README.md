@@ -1,5 +1,7 @@
 # Quick-check
 
+[![Build Status](https://travis-ci.org/fchauvel/quick-check.svg?branch=master)](https://travis-ci.org/fchauvel/quick-check)
+
 Quick-check is small Javascript library to express JSON schema
 directly in the code, parse and convert objects into custom classes.
 
