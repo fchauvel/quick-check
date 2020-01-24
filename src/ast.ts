@@ -86,8 +86,11 @@ export class ObjectType implements Type {
 
     private _properties: Index<Property>;
 
-    constructor () {
+    constructor (properties: Property[]) {
         this._properties = {}
+        for  (const eachProperty of properties) {
+            this._properties[eachProperty.name] = eachProperty;
+        }
     }
 
     get properties(): Property[] {
@@ -104,17 +107,6 @@ export class ObjectType implements Type {
 
     public accept(visitor: Visitor): void {
         visitor.visitObject(this);
-    }
-
-    // TODO: Move this outside the AST
-    public with(property: Property): ObjectType {
-        if (property.name in this._properties) {
-            throw new Error(
-                `Duplicated property name '${property.name}'`
-            );
-        }
-        this._properties[property.name] = property;
-        return this;
     }
 
 }
@@ -156,16 +148,6 @@ export class Property implements Visitable {
 
     public get type(): Type {
         return this._type;
-    }
-
-    // TODO: Move this outside the ast
-    public ofType(type:  Type | string): Property {
-        if (typeof type === "string") {
-            this._type = new  Reference(type);
-        } else {
-            this._type = type;
-        }
-        return this;
     }
 
     public accept(visitor: Visitor): void {

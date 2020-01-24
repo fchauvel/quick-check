@@ -12,32 +12,7 @@
 import { Path } from "./path";
 import { Report, ErrorCode } from "./issues";
 import * as ast from "./ast";
-
-
-class TypeDeclaration {
-
-    private _name: string;
-    private _type: ast.Type;
-
-    constructor (name: string, aType?: ast.Type) {
-        this._name = name;
-        this._type = aType || new ast.StringType();
-    }
-
-
-    public isNamed(name: string) {
-        return this._name === name;
-    }
-
-    public get type(): ast.Type {
-        return this._type;
-    }
-
-    public as(type: ast.Type): void {
-        this._type = type;
-    }
-
-}
+import * as dsl from "./dsl";
 
 
 class Parser<T> implements ast.Visitor {
@@ -212,16 +187,19 @@ class Parser<T> implements ast.Visitor {
 
 export class Grammar {
 
-    private _declarations: {[name: string]: TypeDeclaration};
+    private _declarations: {[name: string]: dsl.TypeDeclaration};
 
     constructor () {
         this._declarations = {};
-        this._declarations["string"]
-            = new TypeDeclaration("string", new ast.StringType());
-        this._declarations["number"]
-            = new TypeDeclaration("number", new ast.Number());
-        this._declarations["boolean"]
-            = new TypeDeclaration("boolean", new ast.Boolean());
+        this._declarations["string"] =
+            new dsl.TypeDeclaration("string")
+            .as(dsl.aString());
+        this._declarations["number"] =
+            new dsl.TypeDeclaration("number")
+            .as(dsl.aNumber());
+        this._declarations["boolean"] =
+            new dsl.TypeDeclaration("boolean")
+            .as(dsl.aBoolean());
 
     }
 
@@ -233,11 +211,11 @@ export class Grammar {
         return declaration.type;
     }
 
-    public define(name: string): TypeDeclaration {
+    public define(name: string): dsl.TypeDeclaration {
         if (name in this._declarations) {
             throw new Error(`Duplicate type name '{name}'!`);
         }
-        this._declarations[name] = new TypeDeclaration(name);
+        this._declarations[name] = new dsl.TypeDeclaration(name);
         return this._declarations[name];
     }
 
@@ -245,35 +223,4 @@ export class Grammar {
     public read(json: any): any {
         return new Parser(this, Path.from(json));
     }
-}
-
-
-export function anObject(): ast.ObjectType {
-    return new ast.ObjectType();
-}
-
-
-export function aProperty(name: string): any {
-    return new ast.Property(name);
-}
-
-type TypeRef = string | ast.Type;
-
-export function anArrayOf(entryType: string | ast.Type): ast.ArrayType {
-    if (typeof entryType === "string") {
-        return new ast.ArrayType(new ast.Reference(entryType as string));
-    }
-    return new ast.ArrayType(entryType as ast.Type);
-}
-
-export function eitherOf(...candidates: TypeRef[]): ast.Union {
-    const types: ast.Type[] = [];
-    for (const anyCandidate of candidates) {
-        if (typeof anyCandidate ===  "string") {
-            types.push(new ast.Reference(anyCandidate as string));
-        } else {
-            types.push(anyCandidate);
-        }
-    }
-    return new ast.Union(types);
 }

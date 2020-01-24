@@ -9,11 +9,8 @@
  */
 
 
-import { Grammar,
-         anObject,
-         aProperty,
-         anArrayOf,
-         eitherOf } from "../src/grammar";
+import { anArrayOf, anObject, aProperty, eitherOf, } from "../src/dsl";
+import { Grammar } from "../src/grammar";
 import { ErrorCode } from "../src/issues";
 
 
