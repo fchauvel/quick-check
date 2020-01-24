@@ -39,16 +39,32 @@ interface Visitable {
 }
 
 
-export interface Type extends Visitable {
+export type Converter = (data: any) => any;
+
+
+export abstract class Type implements Visitable {
+
+    private _converter: Converter;
+
+    constructor(converter?: Converter) {
+        this._converter = converter || ((data: any): any => { return data });
+    }
+
+    public abstract accept(visitor: Visitor): void;
+
+    public convert(data: any):  any {
+        return this._converter(data);
+    }
 
 }
 
 
-export class ArrayType implements Type {
+export class ArrayType extends Type {
 
     private _contentType: Type;
 
-    constructor(contentType: Type) {
+    constructor(contentType: Type, converter?: Converter) {
+        super(converter);
         this._contentType = contentType;
     }
 
@@ -63,11 +79,12 @@ export class ArrayType implements Type {
 }
 
 
-export class Union implements Type {
+export class Union extends Type {
 
     private _candidateTypes: Type[];
 
-    constructor(candidateTypes: Type[]) {
+    constructor(candidateTypes: Type[], converter?: Converter) {
+        super(converter);
         this._candidateTypes = candidateTypes;
     }
 
@@ -82,11 +99,12 @@ export class Union implements Type {
 }
 
 
-export class ObjectType implements Type {
+export class ObjectType extends Type {
 
     private _properties: Index<Property>;
 
-    constructor (properties: Property[]) {
+    constructor (properties: Property[], converter?: Converter) {
+        super(converter);
         this._properties = {}
         for  (const eachProperty of properties) {
             this._properties[eachProperty.name] = eachProperty;
@@ -112,11 +130,12 @@ export class ObjectType implements Type {
 }
 
 
-export class Reference implements Type  {
+export class Reference extends Type  {
 
     private _typeName: string;
 
     constructor (typeName: string) {
+        super(undefined);
         this._typeName = typeName;
     }
 
@@ -157,7 +176,13 @@ export class Property implements Visitable {
 }
 
 
-export class StringType implements Type {
+export class StringType extends Type {
+
+
+    constructor(converter?: Converter) {
+        super(converter);
+    }
+
 
     public accept(visitor: Visitor): void {
         visitor.visitString(this);
@@ -165,7 +190,11 @@ export class StringType implements Type {
 
 }
 
-export class Number implements Type {
+export class Number extends Type {
+
+    constructor(converter?: Converter) {
+        super(converter);
+    }
 
     public accept(visitor: Visitor): void {
         visitor.visitNumber(this);
@@ -174,7 +203,11 @@ export class Number implements Type {
 }
 
 
-export class Boolean implements Type {
+export class Boolean extends Type {
+
+    constructor(converter?: Converter) {
+        super(converter);
+    }
 
     public accept(visitor: Visitor): void {
         visitor.visitBoolean(this);

@@ -12,7 +12,7 @@
 import { anArrayOf, anObject, aProperty, eitherOf, } from "../src/dsl";
 import { Grammar } from "../src/grammar";
 import { ErrorCode } from "../src/issues";
-
+import { Person, Team, sampleTeam } from "./team";
 
 
 class Test {
@@ -163,7 +163,7 @@ describe("A grammar with a union of string and number should", () => {
         expect(value).toBe(jsonNumber);
     });
 
-    test("Raise a type error for every other type", () => {
+    test("raise a type error for every other type", () => {
         const jsonBoolean = true;
         tester.verifyIssues(jsonBoolean, "union",
                             [ [ ErrorCode.NO_MATCHING_TYPE, 1 ]]);
@@ -223,5 +223,99 @@ describe("A grammar using an object should", () => {
                             [ [ ErrorCode.TYPE_ERROR, 1  ] ]);
     });
 
+
+});
+
+
+describe("A grammar with production rules should on object",  () => {
+
+    const tester = new Test();
+    tester.grammar.define("person")
+        .as(anObject()
+            .with(aProperty("firstname").ofType("string"))
+            .with(aProperty("lastname").ofType("string")));
+    tester.grammar.define("team")
+        .as(anObject()
+            .with(aProperty("name").ofType("string"))
+            .with(aProperty("members")
+                  .ofType(anArrayOf(eitherOf("person", "team")))));
+
+    tester.grammar
+        .on("person")
+        .apply(data => new Person(data.firstname, data.lastname));
+    tester.grammar
+        .on("team")
+        .apply(data => new Team(data.name, data.members));
+
+
+    test("extract the members of a team as persons", () => {
+        const team = tester.grammar.read(sampleTeam()).as("team");
+
+        expect(team.members).toHaveLength(2);
+        expect(team.members[0].name).toBe("Doe, John");
+        expect(team.members[1].name).toBe("Bond, James");
+    });
+
+});
+
+
+describe("A grammar with a production rule",  () => {
+
+
+    test("modify strings accordingly",  () => {
+
+        const tester = new Test();
+        tester.grammar
+            .on("string")
+            .apply(s => s.toUpperCase());
+
+
+        const text = "Bonjour";
+
+        const output = tester.grammar.read(text).as("string");
+
+        expect(output).toBe(text.toUpperCase());
+
+    });
+
+
+    test("modify the number accordingly",  () => {
+        const tester = new Test();
+        tester.grammar
+            .on("number")
+            .apply(n => n + 1);
+
+
+        const text = 125;
+        const output = tester.grammar.read(text).as("number");
+        expect(output).toBe(126);
+    });
+
+
+    test("modify booleans accordingly",  () => {
+        const tester = new Test();
+        tester.grammar
+            .on("boolean")
+            .apply(b => !b);
+
+
+        const input = true;
+        const output = tester.grammar.read(input).as("boolean");
+        expect(output).toBe(false);
+    });
+
+
+    test("modify arrays accordingly",  () => {
+        const tester = new Test();
+        tester.grammar.define("list-of-number")
+            .as(anArrayOf("number"));
+        tester.grammar
+            .on("list-of-number")
+            .apply(a => a.reverse());
+
+        const input = [1, 2, 3];
+        const output = tester.grammar.read(input).as("list-of-number");
+        expect(output).toStrictEqual([3, 2, 1]);
+    });
 
 });
