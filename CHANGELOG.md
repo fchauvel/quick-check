@@ -5,11 +5,11 @@
 *   Basic type-checking of Object trees, including:
 
     * Boolean values
-    * String values
+    * String values (with regexp)
     * Numbers
     * Arrays
     * Union of types
-    * Objects
+    * Objects (with optional properties)
 
 *   The type-checking detects
 

@@ -169,14 +169,17 @@ class Parser<T> implements ast.Visitor {
         for (const eachProperty of definition.properties) {
             const key = eachProperty.name;
             let data = this._path.value[key];
-            if (!data) {
-                data = "Missing";
-                this.reportMissingProperty(key, data);
+            if (data) {
+                this._path.enter(key, data);
+                eachProperty.accept(this);
+                result[key] = this._path.value;
+                this._path.exit();
+            } else {
+                result[key] = null;
+                if (eachProperty.isMandatory) {
+                    this.reportMissingProperty(key, null);
+                }
             }
-            this._path.enter(key, data);
-            eachProperty.accept(this);
-            result[key] = this._path.value;
-            this._path.exit();
         }
         for (const eachKey in this._path.value) {
             if (!definition.hasProperty(eachKey)) {
