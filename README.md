@@ -8,16 +8,33 @@ directly in the code, parse and convert objects into custom classes.
 Consider for example the following declaration of a 'schema':
 
 ```typescript
-const grammar = new Grammar();
-grammar.define("person")
-   .as(anObject()
-       .with(aProperty("firstname").as("string"))
-       .with(aProperty("lastname").as("string")));
-grammar.define("team")
+import { Grammar } from "@fchauvel/quick-check";
+import { anArrayOf,
+         anObject,
+         aProperty,
+         aString,
+         eitherOf }  from "@fchauvel/quick-check";
+
+const schema = new Grammar();
+schema.define("team")
     .as(anObject()
-        .with(aProperty("name").as("string"))
+        .with(aProperty("name").ofType("string"))
         .with(aProperty("members")
-            .as(anArrayOf(eitherOf("person", "team")))));
+              .ofType(anArrayOf(eitherOf("person", "team")))));
+
+schema.define("person")
+    .as(anObject()
+        .with(aProperty("firstname").ofType("string"))
+        .with(aProperty("lastname").ofType("string"))
+        .with(aProperty("leads")
+              .ofType(anArrayOf("task-reference")))
+        .with(aProperty("contributes")
+              .ofType(anArrayOf("task-reference"))));
+
+schema.define("task-reference")
+    .as(aString()
+        .thatMatches(/(T|WP)\s*(\d+)(\.(\d+))*/g));
+
 ```
 
 ## Type-checking
@@ -46,7 +63,7 @@ const data = {
 }
 
 try {
-    grammar.read(data).as("team");
+    schema.read(data).as("team");
 
 } catch (report) {
     for (const anyIssue of report.issues) {
