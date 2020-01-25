@@ -10,15 +10,16 @@
 
 
 import { Test } from "./commons";
+import { aString } from "../src/dsl"
 import { ErrorCode } from "../src/issues";
 
 
 
-describe("A grammar expecting a string should",  () => {
+describe("A grammar expecting a string",  () => {
 
     const tester = new Test();
 
-    test("Accept a single string", () => {
+    test("should accept a single string", () => {
         const json = "this is  a string";
 
         const text = tester.grammar.read(json).as("string");
@@ -30,6 +31,28 @@ describe("A grammar expecting a string should",  () => {
     test("report a type error when other value are given", () => {
         tester.verifyIssues(true, "number",
                           [ [ ErrorCode.TYPE_ERROR, 1 ]]);
+    });
+
+
+    describe("given a pattern is defined", () =>  {
+
+        tester.grammar
+            .define("task name")
+            .as(aString()
+                .thatMatches(/(T|WP)\s*(\d+)(\.(\d+))*/g));
+
+        test("accept strings that fit the pattern", () => {
+            const value = tester.grammar.read("WP 1.2").as("task name");
+            expect(value).toBe("WP 1.2");
+        });
+
+        test("detect strings that do not fit the pattern", () => {
+            tester.verifyIssues(
+                "Hello World!",
+                "task name",
+                [ [ ErrorCode.INVALID_STRING_PATTERN, 1 ] ]);
+        });
+
     });
 
 

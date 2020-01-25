@@ -179,8 +179,21 @@ export function aString(): StringBuilder {
 
 class StringBuilder extends TypeBuilder<ast.StringType> {
 
+    private _pattern: RegExp;
+
+    constructor () {
+        super();
+        this._pattern = /.*/s;
+    }
+
+    public thatMatches(pattern: RegExp): StringBuilder {
+        this._pattern = pattern;
+        return this;
+    }
+
+
     public build(): ast.StringType {
-        return new ast.StringType(this.converter);
+        return new ast.StringType(this._pattern, this.converter);
     }
 
 }
@@ -210,21 +223,19 @@ class BooleanBuilder extends TypeBuilder<ast.Boolean> {
 }
 
 
-type Converter = (data: any) => any;
-
 export class TypeDeclaration {
 
     private _name: string;
     private _builder: TypeBuilder<any>;
     private _type: { isBuilt: boolean, result: ast.Type};
-    private _converter: Converter
+    private _converter: ast.Converter
 
     constructor(name: string) {
         this._name = name;
         this._builder = new StringBuilder();
         this._type = {
             isBuilt:  false,
-            result: new ast.StringType()
+            result: aString().build()
         };
         this._converter = (o) => o;
     }
@@ -246,7 +257,7 @@ export class TypeDeclaration {
         return this;
     }
 
-    public apply(converter: Converter) {
+    public apply(converter: ast.Converter) {
         this._builder.converter = converter;
     }
 

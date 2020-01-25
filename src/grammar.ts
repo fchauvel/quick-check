@@ -92,6 +92,14 @@ class Parser<T> implements ast.Visitor {
         );
     }
 
+
+    private reportInvalidStringPattern(pattern: RegExp) {
+        this._report.error(
+            ErrorCode.INVALID_STRING_PATTERN,
+            this._path.toString(),
+            `Expected a string that matches '${pattern}', but found '${this._path.value}'.`);
+    }
+
     public as(type: string  | ast.Type): any {
         let expectedType: ast.Type;
         if (typeof type === "string") {
@@ -106,7 +114,11 @@ class Parser<T> implements ast.Visitor {
 
     public visitString(definition: ast.StringType): void {
         this.ensureTypeIs("string", "expecting string!");
-        this._path.value = definition.convert(this._path.value);
+        if (definition.approve(this._path.value)) {
+            this._path.value = definition.convert(this._path.value);
+        } else {
+            this.reportInvalidStringPattern(definition.pattern);
+        }
     }
 
 
