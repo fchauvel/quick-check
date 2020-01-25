@@ -65,7 +65,6 @@ describe("A grammar expecting a string",  () => {
         const text = "lowercase";
         const output = tester.grammar.read(text).as("string");
         expect(output).toBe(text.toUpperCase());
-
     });
 
 

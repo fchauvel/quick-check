@@ -1,9 +1,15 @@
 {
-  "compilerOptions": {
-    "target": "es6",  
-    "module": "commonjs",
-    "strict": true,      
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true 
-  }
+    "compilerOptions": {
+	"target": "es6",  
+	"module": "commonjs",
+	"strict": true,      
+	"esModuleInterop": true,
+	"forceConsistentCasingInFileNames": true,
+	"outDir": "./dist",
+	"declarationDir": "./dist",
+	"declaration": true
+    },
+    "include": [
+	"src/**/*",
+    ]
 }

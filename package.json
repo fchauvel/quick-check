@@ -2,9 +2,12 @@
     "name": "@fchauvel/quick-check",
     "version": "0.1.0",
     "description": "Internal DSL to check and convert JSON structures",
-    "main": "build/index.js",
+    "main": "dist/",
+    "types": "dist/",
     "scripts": {
-	"test": "jest"
+	"test": "jest",
+	"build": "tsc",
+	"prepare" : "npm run build"
     },
     "repository": {
 	"type": "git",
