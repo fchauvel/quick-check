@@ -156,9 +156,9 @@ export class Property implements Visitable {
     private _name: string;
     private _type: Type;
 
-    constructor (name: string, type?: Type) {
+    constructor (name: string, type: Type) {
         this._name = name;
-        this._type = type || new StringType();
+        this._type = type;
     }
 
     public get name(): string {
@@ -178,11 +178,21 @@ export class Property implements Visitable {
 
 export class StringType extends Type {
 
+    private _pattern: RegExp;
 
-    constructor(converter?: Converter) {
+    constructor(pattern: RegExp, converter?: Converter) {
         super(converter);
+        this._pattern = pattern;
     }
 
+    public get pattern(): RegExp {
+        return this._pattern;
+    }
+
+    public approve(text: string): boolean {
+        const approval = this._pattern.test(text);
+        return approval;
+    }
 
     public accept(visitor: Visitor): void {
         visitor.visitString(this);

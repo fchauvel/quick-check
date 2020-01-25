@@ -13,6 +13,7 @@ export class ErrorCode {
     public static readonly MISSING_PROPERTY = "MISSING PROPERTY";
     public static readonly IGNORED_PROPERTY = "IGNORED PROPERTY";
     public static readonly NO_MATCHING_TYPE = "NO MATCHING TYPE";
+    public static readonly INVALID_STRING_PATTERN ="INVALID STRING PATTERN"
 }
 
 
