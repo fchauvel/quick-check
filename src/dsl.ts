@@ -90,10 +90,22 @@ class PropertyBuilder implements Builder<ast.Property> {
 
     private _name: string;
     private _type: TypeBuilder<any>;
+    private _isOptional: boolean;
 
     constructor(name: string) {
         this._name = name;
         this._type = new StringBuilder();
+        this._isOptional = false;
+    }
+
+    public optional(): PropertyBuilder {
+        this._isOptional = true;
+        return this;
+    }
+
+    public mandatory(): PropertyBuilder {
+        this._isOptional = false;
+        return this;
     }
 
     public ofType(type: TypeRef<any>): PropertyBuilder {
@@ -106,7 +118,9 @@ class PropertyBuilder implements Builder<ast.Property> {
     }
 
     public build(): ast.Property {
-        return new ast.Property(this._name,
+        return new ast.Property(
+            this._name,
+            this._isOptional,
             this._type.build());
     }
 }

@@ -19,7 +19,9 @@ describe("A grammar using an object should", () => {
     const tester = new Test();
     tester.grammar.define("person").as(
         anObject()
-            .with(aProperty("firstname").ofType("string"))
+            .with(aProperty("firstname")
+                  .optional()
+                  .ofType("string"))
             .with(aProperty("lastname").ofType("string"))
     );
 
@@ -42,6 +44,16 @@ describe("A grammar using an object should", () => {
         tester.verifyIssues(json, "person",
                             [ [ ErrorCode.MISSING_PROPERTY, 1  ] ]);
 
+    });
+
+
+    test("not warn about missing optional properties", () => {
+        const json = { lastname:  "Doe" };
+
+        const john = tester.grammar.read(json).as("person");
+
+        expect(john.firstname).toBe(null);
+        expect(john.lastname).toBe("Doe");
     });
 
 
