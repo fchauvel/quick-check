@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-type Index<T> = {[key:string]: T};
+export type Index<T> = {[key:string]: T};
 
 
 export interface Visitor {
@@ -52,6 +52,8 @@ export abstract class Type implements Visitable {
 
     public abstract accept(visitor: Visitor): void;
 
+    public abstract get name(): string;
+
     public convert(data: any):  any {
         return this._converter(data);
     }
@@ -66,6 +68,10 @@ export class ArrayType extends Type {
     constructor(contentType: Type, converter?: Converter) {
         super(converter);
         this._contentType = contentType;
+    }
+
+    public get name(): string {
+        return "array(" + this._contentType.name  + ")";
     }
 
     public get contentType(): Type {
@@ -86,6 +92,12 @@ export class Union extends Type {
     constructor(candidateTypes: Type[], converter?: Converter) {
         super(converter);
         this._candidateTypes = candidateTypes;
+    }
+
+    public get name(): string {
+        return "eitherOf("
+            + this._candidateTypes.map(t => t.name).join(", ")
+            + ")";
     }
 
     public get candidateTypes(): Type[] {
@@ -111,7 +123,11 @@ export class ObjectType extends Type {
         }
     }
 
-    get properties(): Property[] {
+    public get name(): string {
+        return "object( ... )";
+    }
+
+    public get properties(): Property[] {
         const properties: Property[] = [];
         for (const eachKey in this._properties) {
             properties.push(this._properties[eachKey]);
@@ -137,6 +153,10 @@ export class Reference extends Type  {
     constructor (typeName: string) {
         super(undefined);
         this._typeName = typeName;
+    }
+
+    public get name(): string {
+        return this.targetName;
     }
 
     get targetName (): string {
@@ -200,6 +220,10 @@ export class StringType extends Type {
         this._pattern = pattern;
     }
 
+    public get name(): string {
+        return "string";
+    }
+
     public get pattern(): RegExp {
         return this._pattern;
     }
@@ -217,6 +241,10 @@ export class StringType extends Type {
 
 export class Number extends Type {
 
+    public get name(): string {
+        return "number";
+    }
+
     constructor(converter?: Converter) {
         super(converter);
     }
@@ -232,6 +260,10 @@ export class Boolean extends Type {
 
     constructor(converter?: Converter) {
         super(converter);
+    }
+
+    public get name(): string {
+        return "boolean";
     }
 
     public accept(visitor: Visitor): void {

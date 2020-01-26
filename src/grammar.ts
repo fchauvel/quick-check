@@ -50,55 +50,17 @@ class Parser<T> implements ast.Visitor {
     }
 
 
-    private reportWrongType(expectedType:  string): void {
-        this._report.error(
-            ErrorCode.TYPE_ERROR,
-            this._path.toString(),
-            `Expecting a value of type '${expectedType}', but found '${this._path.value}' (of type  '${this._path.type}').`
-        );
-    }
-
-    private reportMissingProperty(key: string, instead?: any): void {
-        this._report.warn(
-            ErrorCode.MISSING_PROPERTY,
-            this._path.toString(),
-            `Expecting a property '${key}' (using default '${instead}'`
-        );
-    }
-
-
     private ensureTypeIs<K>(
         expectedType: string,
         defaultValue: K): void {
         if (this._path.type !== expectedType) {
-            this.reportWrongType(expectedType);
+            this._report.typeError(this._path.toString(),
+                                   expectedType,
+                                   this._path.value);
             this._path.value = defaultValue;
         }
     }
 
-
-    private reportIgnoredProperty(key: string): void {
-        this._report.warn(
-            ErrorCode.IGNORED_PROPERTY,
-            this._path.toString(),
-            `Ignoring property '{key}' (with value '${this._path.value[key]}')`);
-    }
-
-    private reportNoMatchingType(): void {
-        this._report.error(
-            ErrorCode.NO_MATCHING_TYPE,
-            this._path.toString(),
-            "The given value does not match any of the possible types"
-        );
-    }
-
-
-    private reportInvalidStringPattern(pattern: RegExp) {
-        this._report.error(
-            ErrorCode.INVALID_STRING_PATTERN,
-            this._path.toString(),
-            `Expected a string that matches '${pattern}', but found '${this._path.value}'.`);
-    }
 
     public as(type: string  | ast.Type): any {
         let expectedType: ast.Type;
@@ -112,12 +74,16 @@ class Parser<T> implements ast.Visitor {
         return this.result;
     }
 
+
     public visitString(definition: ast.StringType): void {
         this.ensureTypeIs("string", "expecting string!");
         if (definition.approve(this._path.value)) {
             this._path.value = definition.convert(this._path.value);
         } else {
-            this.reportInvalidStringPattern(definition.pattern);
+            this._report.invalidStringPattern(
+                this._path.toString(),
+                definition,
+                this._path.value);
         }
     }
 
@@ -149,17 +115,21 @@ class Parser<T> implements ast.Visitor {
 
 
     public visitUnion(definition: ast.Union): void {
+        const reports: ast.Index<Report> = {};
         for (const anyType of definition.candidateTypes) {
             try {
                 this._path.value = this.fork(anyType);
                 return;
 
             } catch (issues) {
+                reports[anyType.name] = issues;
                 continue;
 
             }
         }
-        this.reportNoMatchingType();
+        this._report.noMatchingType(
+            this._path.toString(),
+            reports);
     }
 
     public visitObject(definition: ast.ObjectType): void {
@@ -177,13 +147,19 @@ class Parser<T> implements ast.Visitor {
             } else {
                 result[key] = eachProperty.defaultValue;
                 if (eachProperty.isMandatory) {
-                    this.reportMissingProperty(key, result[key]);
+                    this._report.missingProperty(
+                        this._path.toString(),
+                        eachProperty);
                 }
             }
         }
         for (const eachKey in this._path.value) {
             if (!definition.hasProperty(eachKey)) {
-                this.reportIgnoredProperty(eachKey);
+                this._report.ignoredProperty(
+                    this._path.toString(),
+                    eachKey,
+                    this._path.value[eachKey]
+                );
             }
         }
         this._path.value = definition.convert(result);
