@@ -23,19 +23,24 @@ describe("A grammar using an object should", () => {
                   .optional()
                   .ofType("string"))
             .with(aProperty("lastname").ofType("string"))
+            .with(aProperty("points")
+                  .ofType("number")
+                  .withDefault(100))
     );
 
 
     test("extract all fields", () => {
         const json = {
             firstname: "John",
-            lastname:  "Doe"
+            lastname:  "Doe",
+            points:  50
         };
 
         const john = tester.grammar.read(json).as("person");
 
         expect(john.firstname).toBe("John");
         expect(john.lastname).toBe("Doe");
+        expect(john.points).toBe(50);
     });
 
 
@@ -54,6 +59,7 @@ describe("A grammar using an object should", () => {
 
         expect(john.firstname).toBe(null);
         expect(john.lastname).toBe("Doe");
+        expect(john.points).toBe(100);
     });
 
 
@@ -61,7 +67,7 @@ describe("A grammar using an object should", () => {
         const json = {
             firstname: "John",
             lastname: "Doe",
-            IQ: 250
+            extra_property: 250
         };
 
         tester.verifyIssues(json, "person",

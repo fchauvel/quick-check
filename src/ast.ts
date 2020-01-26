@@ -156,15 +156,24 @@ export class Property implements Visitable {
     private _name: string;
     private _type: Type;
     private _isOptional: boolean;
+    private _defaultValue: any;
 
-    constructor (name: string, isOptional: boolean, type: Type) {
+    constructor (name: string,
+                 isOptional: boolean,
+                 defaultValue: any,
+                 type: Type) {
         this._name = name;
         this._type = type;
         this._isOptional = isOptional;
+        this._defaultValue = defaultValue;
     }
 
     public get isMandatory(): boolean {
         return !this._isOptional;
+    }
+
+    public get defaultValue(): any {
+        return this._defaultValue;
     }
 
     public get name(): string {

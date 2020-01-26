@@ -175,9 +175,9 @@ class Parser<T> implements ast.Visitor {
                 result[key] = this._path.value;
                 this._path.exit();
             } else {
-                result[key] = null;
+                result[key] = eachProperty.defaultValue;
                 if (eachProperty.isMandatory) {
-                    this.reportMissingProperty(key, null);
+                    this.reportMissingProperty(key, result[key]);
                 }
             }
         }
