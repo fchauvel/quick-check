@@ -91,16 +91,23 @@ class PropertyBuilder implements Builder<ast.Property> {
     private _name: string;
     private _type: TypeBuilder<any>;
     private _isOptional: boolean;
+    private _defaultValue: any;
 
     constructor(name: string) {
         this._name = name;
         this._type = new StringBuilder();
         this._isOptional = false;
+        this._defaultValue = null;
     }
 
-    public optional(): PropertyBuilder {
+    public optional(defaultValue: any = null): PropertyBuilder {
         this._isOptional = true;
+        this._defaultValue = defaultValue;
         return this;
+    }
+
+    public withDefault(defaultValue: any): PropertyBuilder {
+        return this.optional(defaultValue);
     }
 
     public mandatory(): PropertyBuilder {
@@ -121,6 +128,7 @@ class PropertyBuilder implements Builder<ast.Property> {
         return new ast.Property(
             this._name,
             this._isOptional,
+            this._defaultValue,
             this._type.build());
     }
 }
