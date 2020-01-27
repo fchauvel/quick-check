@@ -2,6 +2,8 @@
 
 ## [Unreleased][unreleased]
 
+## [Quick-Check v0.1.0][v0.1.0]
+
 -   Basic type-checking of Object trees, including:
 
     -   Boolean values
@@ -20,4 +22,5 @@
 -   Optional production rules associated with strings, booleam value,
     numbers, array and objects.
 
-[unreleased]: https://github.com/fchauvel/quick-check/compare/master..dev
+[unreleased]: https://github.com/fchauvel/quick-check/compare/v0.1.0..dev
+[v0.1.0]: https://github.com/fchauvel/quick-check/compare/v0.1.0..dev
