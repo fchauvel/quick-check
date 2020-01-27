@@ -10,8 +10,6 @@
 
 import { Test } from "./commons";
 import { anArrayOf, anObject, aProperty, eitherOf, } from "../src/dsl";
-import { Grammar } from "../src/grammar";
-import { ErrorCode } from "../src/issues";
 import { Person, Team, sampleTeam } from "./team";
 
 

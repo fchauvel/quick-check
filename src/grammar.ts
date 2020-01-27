@@ -10,7 +10,7 @@
 
 
 import { Path } from "./path";
-import { Report, ErrorCode } from "./issues";
+import { Report } from "./issues";
 import * as ast from "./ast";
 import * as dsl from "./dsl";
 
@@ -135,10 +135,10 @@ class Parser<T> implements ast.Visitor {
     public visitObject(definition: ast.ObjectType): void {
         this.ensureTypeIs("object", []);
         this.abortIfAnyIssue();
-        const result: {[key:string]: any} = {};
+        const result: {[key: string]: any} = {};
         for (const eachProperty of definition.properties) {
             const key = eachProperty.name;
-            let data = this._path.value[key];
+            const data = this._path.value[key];
             if (data) {
                 this._path.enter(key, data);
                 eachProperty.accept(this);
@@ -208,7 +208,7 @@ export class Grammar {
 
     public define(name: string): dsl.TypeDeclaration {
         if (name in this._declarations) {
-            throw new Error(`Duplicate type name '{name}'!`);
+            throw new Error("Duplicate type name '{name}'!");
         }
         this._declarations[name] = new dsl.TypeDeclaration(name);
         return this._declarations[name];

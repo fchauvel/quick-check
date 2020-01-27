@@ -71,5 +71,5 @@ export function sampleTeam(): any {
                 lastname:  "Bond"
             }
         ]
-    }
+    };
 }

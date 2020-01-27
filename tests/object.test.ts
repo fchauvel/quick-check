@@ -67,7 +67,7 @@ describe("A grammar using an object should", () => {
         const json = {
             firstname: "John",
             lastname: "Doe",
-            extra_property: 250
+            extraProperty: 250
         };
 
         tester.verifyIssues(json, "person",

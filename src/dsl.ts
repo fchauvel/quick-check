@@ -22,7 +22,7 @@ abstract class TypeBuilder<T extends ast.Type> implements Builder<T> {
     public converter: ast.Converter;
 
     constructor() {
-        this.converter = (data: any) => { return data };
+        this.converter = (data: any): any => { return data; };
     }
 
     public abstract build(): T;
@@ -50,18 +50,12 @@ class ReferenceBuilder extends TypeBuilder<ast.Reference> {
 }
 
 
-export function anObject(): ObjectBuilder {
-    return new ObjectBuilder();
-}
-
-
-
 class ObjectBuilder extends TypeBuilder<ast.ObjectType> {
 
     private _properties: PropertyBuilder[];
 
     constructor() {
-        super()
+        super();
         this._properties = [];
     }
 
@@ -73,17 +67,43 @@ class ObjectBuilder extends TypeBuilder<ast.ObjectType> {
     public build(): ast.ObjectType {
         const properties: ast.Property[] = [];
         for (const eachProperty of this._properties) {
-            properties.push(eachProperty.build())
+            properties.push(eachProperty.build());
         }
         return new ast.ObjectType(properties, this.converter);
     }
 
 }
 
-
-export function aProperty(name: string): PropertyBuilder {
-    return new PropertyBuilder(name);
+export function anObject(): ObjectBuilder {
+    return new ObjectBuilder();
 }
+
+
+class StringBuilder extends TypeBuilder<ast.StringType> {
+
+    private _pattern: RegExp;
+
+    constructor () {
+        super();
+        this._pattern = /.*/s;
+    }
+
+    public thatMatches(pattern: RegExp): StringBuilder {
+        this._pattern = pattern;
+        return this;
+    }
+
+
+    public build(): ast.StringType {
+        return new ast.StringType(this._pattern, this.converter);
+    }
+
+}
+
+export function aString(): StringBuilder {
+    return new StringBuilder();
+}
+
 
 
 class PropertyBuilder implements Builder<ast.Property> {
@@ -134,12 +154,8 @@ class PropertyBuilder implements Builder<ast.Property> {
 }
 
 
-export function anArrayOf<T extends ast.Type>
-    (entryType: TypeRef<T>): ArrayBuilder {
-    if (typeof entryType === "string") {
-        return new ArrayBuilder(new ReferenceBuilder(entryType as string));
-    }
-    return new ArrayBuilder(entryType as TypeBuilder<T>);
+export function aProperty(name: string): PropertyBuilder {
+    return new PropertyBuilder(name);
 }
 
 
@@ -162,18 +178,14 @@ class ArrayBuilder extends TypeBuilder<ast.ArrayType> {
 }
 
 
-export function eitherOf(...candidates: TypeRef<any>[]): UnionBuilder {
-    const builders: TypeBuilder<any>[] = [];
-
-    for (const anyCandidate of candidates) {
-        if (typeof anyCandidate === "string") {
-            builders.push(new ReferenceBuilder(anyCandidate as string));
-        } else {
-            builders.push(anyCandidate);
-        }
+export function anArrayOf<T extends ast.Type>
+    (entryType: TypeRef<T>): ArrayBuilder {
+    if (typeof entryType === "string") {
+        return new ArrayBuilder(new ReferenceBuilder(entryType as string));
     }
-    return new UnionBuilder(builders);
+    return new ArrayBuilder(entryType as TypeBuilder<T>);
 }
+
 
 
 class UnionBuilder extends TypeBuilder<ast.Union> {
@@ -195,34 +207,22 @@ class UnionBuilder extends TypeBuilder<ast.Union> {
 }
 
 
-export function aString(): StringBuilder {
-    return new StringBuilder();
+export function eitherOf(...candidates: TypeRef<any>[]): UnionBuilder {
+    const builders: TypeBuilder<any>[] = [];
+
+    for (const anyCandidate of candidates) {
+        if (typeof anyCandidate === "string") {
+            builders.push(new ReferenceBuilder(anyCandidate as string));
+        } else {
+            builders.push(anyCandidate);
+        }
+    }
+    return new UnionBuilder(builders);
 }
 
-class StringBuilder extends TypeBuilder<ast.StringType> {
-
-    private _pattern: RegExp;
-
-    constructor () {
-        super();
-        this._pattern = /.*/s;
-    }
-
-    public thatMatches(pattern: RegExp): StringBuilder {
-        this._pattern = pattern;
-        return this;
-    }
 
 
-    public build(): ast.StringType {
-        return new ast.StringType(this._pattern, this.converter);
-    }
 
-}
-
-export function aNumber(): NumberBuilder {
-    return new NumberBuilder();
-}
 
 class NumberBuilder extends TypeBuilder<ast.Number> {
 
@@ -232,9 +232,11 @@ class NumberBuilder extends TypeBuilder<ast.Number> {
 
 }
 
-export function aBoolean(): BooleanBuilder {
-    return new BooleanBuilder();
+export function aNumber(): NumberBuilder {
+    return new NumberBuilder();
 }
+
+
 
 class BooleanBuilder extends TypeBuilder<ast.Boolean> {
 
@@ -245,11 +247,15 @@ class BooleanBuilder extends TypeBuilder<ast.Boolean> {
 }
 
 
+export function aBoolean(): BooleanBuilder {
+    return new BooleanBuilder();
+}
+
 export class TypeDeclaration {
 
     private _name: string;
     private _builder: TypeBuilder<any>;
-    private _type: { isBuilt: boolean, result: ast.Type};
+    private _type: { isBuilt: boolean; result: ast.Type};
     private _converter: ast.Converter
 
     constructor(name: string) {
@@ -259,10 +265,10 @@ export class TypeDeclaration {
             isBuilt:  false,
             result: aString().build()
         };
-        this._converter = (o) => o;
+        this._converter = (o):  any => o;
     }
 
-    public isNamed(name: string) {
+    public isNamed(name: string): boolean {
         return this._name === name;
     }
 
@@ -279,7 +285,8 @@ export class TypeDeclaration {
         return this;
     }
 
-    public apply(converter: ast.Converter) {
+
+    public apply(converter: ast.Converter): any {
         this._builder.converter = converter;
     }
 

@@ -24,7 +24,7 @@ describe("A grammar expecting an array should", () => {
         const json = [1, 2, 3, 4, 5];
         const values = tester.grammar.read(json).as("array-of-number");
         expect(values).toHaveLength(json.length);
-        for(const [index, value] of json.entries()) {
+        for(const index in json) {
             expect(values[index]).toBe(json[index]);
         }
     });

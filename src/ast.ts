@@ -8,7 +8,7 @@
  * See the LICENSE file for details.
  */
 
-export type Index<T> = {[key:string]: T};
+export type Index<T> = {[key: string]: T};
 
 
 export interface Visitor {
@@ -47,7 +47,7 @@ export abstract class Type implements Visitable {
     private _converter: Converter;
 
     constructor(converter?: Converter) {
-        this._converter = converter || ((data: any): any => { return data });
+        this._converter = converter || ((data: any): any => { return data; });
     }
 
     public abstract accept(visitor: Visitor): void;
@@ -117,7 +117,7 @@ export class ObjectType extends Type {
 
     constructor (properties: Property[], converter?: Converter) {
         super(converter);
-        this._properties = {}
+        this._properties = {};
         for  (const eachProperty of properties) {
             this._properties[eachProperty.name] = eachProperty;
         }
