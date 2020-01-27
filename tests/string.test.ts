@@ -10,7 +10,7 @@
 
 
 import { Test } from "./commons";
-import { aString } from "../src/dsl"
+import { aString } from "../src/dsl";
 import { ErrorCode } from "../src/issues";
 
 

@@ -10,7 +10,6 @@
 
 
 import { Test } from "./commons";
-import { anArrayOf } from "../src/dsl";
 import { ErrorCode } from "../src/issues";
 
 

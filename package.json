@@ -5,48 +5,55 @@
     "main": "dist/",
     "types": "dist/",
     "scripts": {
-	"test": "jest",
-	"build": "tsc",
-	"prepare" : "npm run build"
+        "test": "jest",
+        "build": "tsc",
+        "prepare": "npm run build",
+        "eslint": "eslint ./**/*.{ts,json} --fix",
+        "tslint": "tslint -p tsconfig.json --fix",
+        "lint": "npm run eslint && npm run tslint",
+        "remark": "remark . -o"
     },
     "repository": {
-	"type": "git",
-	"url": "git+ssh://git@github.com/fchauvel/quick-check.git"
+        "type": "git",
+        "url": "git+ssh://git@github.com/fchauvel/quick-check.git"
     },
     "keywords": [
-	"JSON",
-	"YAML",
-	"schemas",
-	"type-checking",
-	"convertion"
+        "JSON",
+        "YAML",
+        "schemas",
+        "type-checking",
+        "convertion"
     ],
     "author": "Franck Chauvel",
     "license": "MIT",
     "bugs": {
-	"url": "https://github.com/fchauvel/quick-check/issues"
+        "url": "https://github.com/fchauvel/quick-check/issues"
     },
     "homepage": "https://github.com/fchauvel/quick-check#readme",
     "devDependencies": {
-	"@types/jest": "^24.9.0",
-	"babel-jest": "^25.1.0",
-	"jest": "^25.1.0",
-	"ts-jest": "^25.0.0"
+        "@types/jest": "^24.9.0",
+        "@typescript-eslint/eslint-plugin": "^2.17.0",
+        "@typescript-eslint/parser": "^2.17.0",
+        "babel-jest": "^25.1.0",
+        "eslint": "^6.8.0",
+        "jest": "^25.1.0",
+        "ts-jest": "^25.0.0"
     },
     "dependencies": {
-	"@types/node": "^13.1.8",
-	"typescript": "^3.7.5"
+        "@types/node": "^13.1.8",
+        "typescript": "^3.7.5"
     },
     "jest": {
-	"preset": "ts-jest",
-	"roots": [
-	    "<rootDir>/src",
-	    "<rootDir>/tests"
-	],
-	"modulePaths": [
-	    "."
-	],
-	"collectCoverageFrom": [
-	    "src/**/*.ts"
-	]
+        "preset": "ts-jest",
+        "roots": [
+            "<rootDir>/src",
+            "<rootDir>/tests"
+        ],
+        "modulePaths": [
+            "."
+        ],
+        "collectCoverageFrom": [
+            "src/**/*.ts"
+        ]
     }
 }
