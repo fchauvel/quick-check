@@ -23,4 +23,5 @@
     numbers, array and objects.
 
 [unreleased]: https://github.com/fchauvel/quick-check/compare/v0.1.0..dev
+
 [v0.1.0]: https://github.com/fchauvel/quick-check/compare/v0.1.0..dev
