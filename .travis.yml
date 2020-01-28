@@ -3,10 +3,14 @@ language: node_js
 node_js:
   - '10'
 
+before_script:
+  - npm install codecov -g
+
 script:
   - npm test -- --coverage
 
 after_success:
+  - codecov
   - |
     echo "${TRAVIS_PULL_REQUEST}"
     echo "${TRAVIS_TAG}"
