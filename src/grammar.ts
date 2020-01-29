@@ -90,7 +90,15 @@ class Parser<T> implements ast.Visitor {
 
     public visitNumber(definition: ast.Number): void {
         this.ensureTypeIs("number", 0);
-        this._path.value = definition.convert(this._path.value);
+        const value = this._path.value;
+        const violatedConstraints = definition.approve(value);
+        if (violatedConstraints.length > 0) {
+            this._report.validationError(this._path.toString(),
+                                         violatedConstraints,
+                                         value);
+        } else {
+            this._path.value = definition.convert(value);
+        }
     }
 
 

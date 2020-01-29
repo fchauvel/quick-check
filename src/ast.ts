@@ -39,6 +39,32 @@ interface Visitable {
 }
 
 
+export class Constraint<T> {
+
+    private _description: string;
+    private _verification: (v: T) => boolean;
+
+    public constructor(description: string,
+                       verification: (x: T) => boolean) {
+        this._description = description;
+        this._verification = verification;
+    }
+
+    public get description(): string  {
+        return this._description;
+    }
+
+    public isSatisfiedBy(value: T): boolean {
+        return this._verification(value);
+    }
+
+    public isViolatedBy(value: T): boolean {
+        return !this.isSatisfiedBy(value);
+    }
+
+
+}
+
 export type Converter = (data: any) => any;
 
 
@@ -241,12 +267,19 @@ export class StringType extends Type {
 
 export class Number extends Type {
 
-    public get name(): string {
-        return "number";
+    private _constraints: Constraint<number>[];
+
+    constructor(constraints: Constraint<number>[], converter?: Converter) {
+        super(converter);
+        this._constraints = constraints;
     }
 
-    constructor(converter?: Converter) {
-        super(converter);
+    public approve(value: number): Constraint<number>[] {
+        return this._constraints.filter(c => c.isViolatedBy(value));
+    }
+
+    public get name(): string {
+        return "number";
     }
 
     public accept(visitor: Visitor): void {

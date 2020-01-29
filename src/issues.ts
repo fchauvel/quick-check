@@ -17,7 +17,8 @@ export class ErrorCode {
     public static readonly MISSING_PROPERTY = "MISSING PROPERTY";
     public static readonly IGNORED_PROPERTY = "IGNORED PROPERTY";
     public static readonly NO_MATCHING_TYPE = "NO MATCHING TYPE";
-    public static readonly INVALID_STRING_PATTERN ="INVALID STRING PATTERN"
+    public static readonly INVALID_STRING_PATTERN = "INVALID STRING PATTERN"
+    public static readonly VALIDATION_ERROR = "VALIDATION_ERROR";
 }
 
 class Level {
@@ -37,6 +38,8 @@ interface Visitor {
     visitNoMatchingType(issue: NoMatchingType): void;
 
     visitInvalidStringPattern(issue: InvalidStringPattern): void;
+
+    visitValidationError<T>(issue: ValidationError<T>): void;
 
     visitReport(report: Report): void;
 
@@ -152,6 +155,33 @@ class InvalidStringPattern extends Issue {
 
     public accept(visitor: Visitor): void {
         visitor.visitInvalidStringPattern(this);
+    }
+
+}
+
+
+class ValidationError<T> extends Issue {
+
+    private _violatedConstraints: ast.Constraint<T>[];
+    private _found: T;
+
+    constructor (location: string,
+                 violatedConstraints: ast.Constraint<T>[],
+                 found: T) {
+        super(Level.ERROR,
+              ErrorCode.VALIDATION_ERROR,
+              location);
+        this._violatedConstraints = violatedConstraints;
+        this._found = found;
+    }
+
+    public get description(): string {
+        return `Value '${this._found}' violates some constraints`;
+    }
+
+
+    public accept(visitor: Visitor): void {
+        visitor.visitValidationError(this);
     }
 
 }
@@ -278,6 +308,10 @@ class Formatter implements Visitor {
         this.defaultFormat(issue);
     }
 
+    public visitValidationError<T>(issue: ValidationError<T>): void {
+        this.defaultFormat(issue);
+    }
+
     public visitReport(report: Report): void {
         for (const [index, issue] of report.issues.entries()) {
             this._indexes.push(index);
@@ -334,6 +368,16 @@ export class Report {
                                 found: string): void {
         this._issues.push(
             new InvalidStringPattern(location, expected, found)
+        );
+    }
+
+    public validationError<T>(location: string,
+                              violatedConstraints: ast.Constraint<T>[],
+                              found: T) {
+        this._issues.push(
+            new ValidationError<T>(location,
+                                   violatedConstraints,
+                                   found)
         );
     }
 
