@@ -226,8 +226,61 @@ export function eitherOf(...candidates: TypeRef<any>[]): UnionBuilder {
 
 class NumberBuilder extends TypeBuilder<ast.Number> {
 
+    private _constraints: ast.Constraint<number>[];
+
+    public constructor() {
+        super();
+        this._constraints = [];
+    }
+
+    public strictlyAbove(bound: number): NumberBuilder {
+        this._constraints.push(
+            new ast.Constraint(
+                `Value should be strictly above ${bound}`,
+                v => v > bound
+            )
+        );
+        return this;
+    }
+
+
+    public aboveOrEqualTo(bound: number): NumberBuilder {
+        this._constraints.push(
+            new ast.Constraint(
+                `Value should be above or equal to ${bound}`,
+                v => v >= bound
+            )
+        );
+        return this;
+    }
+
+
+    public strictlyBelow(bound: number): NumberBuilder {
+        this._constraints.push(
+            new ast.Constraint(
+                `Value should be strictly below ${bound}`,
+                v => v < bound
+            )
+        );
+        return this;
+    }
+
+
+    public belowOrEqualTo(bound: number): NumberBuilder {
+        this._constraints.push(
+            new ast.Constraint(
+                `Value should be below or equal to ${bound}`,
+                v => v <= bound
+            )
+        );
+        return this;
+    }
+
+
     public build(): ast.Number {
-        return new ast.Number(this.converter);
+        return new ast.Number(
+            this._constraints,
+            this.converter);
     }
 
 }
