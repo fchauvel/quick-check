@@ -1,0 +1,7 @@
+-   [What is quick-check?](README.md)
+-   [Installation](install.md)
+-   [Type-checking object trees](typechecking.md)
+-   [Converting object trees](convertion.md)
+-   [Usage Example](team.md)
+-   [API reference](api.md)
+-   [Change Log](changelog.md)
