@@ -239,11 +239,12 @@ export class Property implements Visitable {
 
 export class StringType extends Type {
 
-    private _pattern: RegExp;
+    private _constraints: Constraint<string>[];
 
-    constructor(pattern: RegExp, converter?: Converter) {
+
+    constructor(constraints: Constraint<string>[], converter?: Converter) {
         super(converter);
-        this._pattern = pattern;
+        this._constraints = constraints;
     }
 
     public get name(): string {
@@ -251,12 +252,11 @@ export class StringType extends Type {
     }
 
     public get pattern(): RegExp {
-        return this._pattern;
+        return /bonjour/g;
     }
 
-    public approve(text: string): boolean {
-        const approval = this._pattern.test(text);
-        return approval;
+    public approve(value: string): Constraint<string>[] {
+        return this._constraints.filter(c => c.isViolatedBy(value));
     }
 
     public accept(visitor: Visitor): void {

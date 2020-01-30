@@ -81,21 +81,26 @@ export function anObject(): ObjectBuilder {
 
 class StringBuilder extends TypeBuilder<ast.StringType> {
 
-    private _pattern: RegExp;
+    private _constraints: ast.Constraint<string>[];
 
     constructor () {
         super();
-        this._pattern = /.*/s;
+        this._constraints = [];
     }
 
     public thatMatches(pattern: RegExp): StringBuilder {
-        this._pattern = pattern;
+        this._constraints.push(
+            new ast.Constraint(
+                `Value must match the pattern '${pattern}'`,
+                v => pattern.test(v)
+            )
+        );
         return this;
     }
 
 
     public build(): ast.StringType {
-        return new ast.StringType(this._pattern, this.converter);
+        return new ast.StringType(this._constraints, this.converter);
     }
 
 }

@@ -50,7 +50,7 @@ describe("A grammar expecting a string",  () => {
             tester.verifyIssues(
                 "Hello World!",
                 "task name",
-                [ [ ErrorCode.INVALID_STRING_PATTERN, 1 ] ]);
+                [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
         });
 
     });
