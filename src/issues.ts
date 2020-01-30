@@ -17,7 +17,6 @@ export class ErrorCode {
     public static readonly MISSING_PROPERTY = "MISSING PROPERTY";
     public static readonly IGNORED_PROPERTY = "IGNORED PROPERTY";
     public static readonly NO_MATCHING_TYPE = "NO MATCHING TYPE";
-    public static readonly INVALID_STRING_PATTERN = "INVALID STRING PATTERN"
     public static readonly VALIDATION_ERROR = "VALIDATION_ERROR";
 }
 
@@ -36,8 +35,6 @@ interface Visitor {
     visitTypeError(issue: TypeError): void;
 
     visitNoMatchingType(issue: NoMatchingType): void;
-
-    visitInvalidStringPattern(issue: InvalidStringPattern): void;
 
     visitValidationError<T>(issue: ValidationError<T>): void;
 
@@ -132,32 +129,6 @@ class IgnoredProperty extends Issue {
 
 }
 
-
-class InvalidStringPattern extends Issue {
-
-    private _expected: ast.StringType;
-    private _found: string;
-
-    public constructor(location: string,
-                       expected: ast.StringType,
-                       found: string) {
-        super(Level.ERROR,
-              ErrorCode.INVALID_STRING_PATTERN,
-              location);
-        this._expected = expected;
-        this._found = found;
-    }
-
-    public get description(): string {
-        return `Value ${this._found} does not match `
-            + `the required pattern '${this._expected.pattern}'.`;
-    }
-
-    public accept(visitor: Visitor): void {
-        visitor.visitInvalidStringPattern(this);
-    }
-
-}
 
 
 class ValidationError<T> extends Issue {
@@ -304,10 +275,6 @@ class Formatter implements Visitor {
         }
     }
 
-    public visitInvalidStringPattern(issue: InvalidStringPattern): void{
-        this.defaultFormat(issue);
-    }
-
     public visitValidationError<T>(issue: ValidationError<T>): void {
         this.defaultFormat(issue);
     }
@@ -359,15 +326,6 @@ export class Report {
     public ignoredProperty(location: string, key: string, value: any): void {
         this._issues.push(
             new IgnoredProperty(location, key, value)
-        );
-    }
-
-
-    public invalidStringPattern(location: string,
-                                expected: ast.StringType,
-                                found: string): void {
-        this._issues.push(
-            new InvalidStringPattern(location, expected, found)
         );
     }
 
