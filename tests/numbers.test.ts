@@ -95,6 +95,70 @@ describe("A grammar expecting a number should",  () => {
     });
 
 
+    test("report violation of the 'positive' constraint", () => {
+        const tester = new Test();
+        tester.grammar.define("test-number")
+            .as(aNumber().positive());
+
+        tester.verifyIssues(-5, "test-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar.read(0).as("test-number");
+            tester.grammar.read(10).as("test-number");
+        }).not.toThrow();
+    });
+
+
+    test("report violation of the 'strictlyPositive' constraint", () => {
+        const tester = new Test();
+        tester.grammar.define("test-number")
+            .as(aNumber().strictlyPositive());
+
+        tester.verifyIssues(-5, "test-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+        tester.verifyIssues(0, "test-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar.read(10).as("test-number");
+        }).not.toThrow();
+
+    });
+
+
+    test("report violation of the 'negative' constraint", () => {
+        const tester = new Test();
+        tester.grammar.define("test-number")
+            .as(aNumber().negative());
+
+        tester.verifyIssues(5, "test-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar.read(0).as("test-number");
+            tester.grammar.read(-5).as("test-number");
+        }).not.toThrow();
+
+    });
+
+
+    test("report violation of the 'strictlyNegative' constraint", () => {
+        const tester = new Test();
+        tester.grammar.define("test-number")
+            .as(aNumber().strictlyNegative());
+
+        tester.verifyIssues(5, "test-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+        tester.verifyIssues(0, "test-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar.read(-5).as("test-number");
+        }).not.toThrow();
+
+    });
+
     test("apply attached production rule",  () => {
         const tester = new Test();
         tester.grammar

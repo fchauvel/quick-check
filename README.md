@@ -81,8 +81,8 @@ console.log(myTeam.members[1].members[0].name);
       - [X] Greater than
       - [X] Strictly smaller than
       - [X] Smaller than
-      - [ ] Is positive
-      - [ ] Is negative
+      - [X] Is positive
+      - [X] Is negative
       - [ ] CloseTo
     - [ ] Strings
       - [ ] Not empty
@@ -95,5 +95,5 @@ console.log(myTeam.members[1].members[0].name);
       - [ ] Length check (at most)
       - [ ] Length check (at least)
       - [ ] Uniqueness of element
-    - [ ] Unions
+    - [X] Unions
     - [ ] Enumerations
