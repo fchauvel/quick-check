@@ -19,13 +19,22 @@ interface Builder<T> {
 
 abstract class TypeBuilder<T extends ast.Type> implements Builder<T> {
 
+    public _constraints: ast.Constraint<any>[];
     public converter: ast.Converter;
 
     constructor() {
+        this._constraints = [];
         this.converter = (data: any): any => { return data; };
     }
 
     public abstract build(): T;
+
+    protected check<T>(check: (n:T) => boolean,
+                  description: string): this {
+        this._constraints.push(new ast.Constraint<T>(description, check));
+        return this;
+    }
+
 
 }
 
@@ -81,51 +90,32 @@ export function anObject(): ObjectBuilder {
 
 class StringBuilder extends TypeBuilder<ast.StringType> {
 
-    private _constraints: ast.Constraint<string>[];
-
-    constructor () {
-        super();
-        this._constraints = [];
-    }
-
     public thatMatches(pattern: RegExp): StringBuilder {
-        this._constraints.push(
-            new ast.Constraint(
-                `Value must match the pattern '${pattern}'`,
-                v => pattern.test(v)
-            )
+        return this.check<string>(
+            s => pattern.test(s),
+            `Value must match the pattern '${pattern}'`
         );
-        return this;
     }
 
     public nonEmpty(): StringBuilder {
-        this._constraints.push(
-            new ast.Constraint(
-                "Shall not be an empty string",
-                s => s !== ""
-            )
+        return this.check<string>(
+            s => s !== "",
+            "Shall not be an empty string"
         );
-        return this;
     }
 
     public startingWith(prefix: string): StringBuilder {
-        this._constraints.push(
-            new  ast.Constraint(
-                `Shall start with '${prefix}'`,
-                s => s.startsWith(prefix)
-            )
+        return this.check<string>(
+            s => s.startsWith(prefix),
+            `Shall start with '${prefix}'`
         );
-        return this;
-    }
+     }
 
     public endingWith(suffix: string): StringBuilder {
-        this._constraints.push(
-            new  ast.Constraint(
-                `Shall end with '${suffix}'`,
-                s => s.endsWith(suffix)
-            )
+        return this.check<string>(
+            s => s.endsWith(suffix),
+            `Shall end with '${suffix}'`
         );
-        return this;
     }
 
     public build(): ast.StringType {
@@ -260,33 +250,26 @@ export function eitherOf(...candidates: TypeRef<any>[]): UnionBuilder {
 
 class NumberBuilder extends TypeBuilder<ast.Number> {
 
-    private _constraints: ast.Constraint<number>[];
-
-    public constructor() {
-        super();
-        this._constraints = [];
-    }
-
     public strictlyAbove(bound: number): NumberBuilder {
-        return this.check(
+        return this.check<number>(
             v => v > bound,
             `Value should be strictly above ${bound}`);
     }
 
     public aboveOrEqualTo(bound: number): NumberBuilder {
-        return this.check(
+        return this.check<number>(
             v => v >= bound,
             `Value should be above or equal to ${bound}`);
     }
 
     public strictlyBelow(bound: number): NumberBuilder {
-        return this.check(
+        return this.check<number>(
             v => v < bound,
             `Value should be strictly below ${bound}`);
     }
 
     public belowOrEqualTo(bound: number): NumberBuilder {
-        return this.check(
+        return this.check<number>(
             v => v <= bound,
             `Value should be below or equal to ${bound}` );
     }
@@ -307,11 +290,6 @@ class NumberBuilder extends TypeBuilder<ast.Number> {
         return this.strictlyBelow(0);
     }
 
-    private check(check: (n:number) => boolean,
-                  description: string): NumberBuilder {
-        this._constraints.push(new ast.Constraint(description, check));
-        return this;
-    }
 
     public build(): ast.Number {
         return new ast.Number(
