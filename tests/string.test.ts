@@ -55,6 +55,54 @@ describe("A grammar expecting a string",  () => {
 
     });
 
+    test("report string that should not be empty", () => {
+        const tester = new Test();
+        tester.grammar.define("a-non-empty-string")
+            .as(aString().nonEmpty());
+
+        tester.verifyIssues(
+            "",
+            "a-non-empty-string",
+            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+    });
+
+
+    test("report strings that should start with a given prefix", () => {
+        const tester = new Test();
+        tester.grammar.define("with-prefix")
+            .as(aString().startingWith("start"));
+
+        tester.verifyIssues(
+            "bonjour",
+            "with-prefix",
+            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar
+                .read("start something here")
+                .as("with-prefix");
+        }).not.toThrow()
+    });
+
+
+    test("report strings that should end with a given suffix", () => {
+        const tester = new Test();
+        tester.grammar.define("with-suffix")
+            .as(aString().endingWith("end"));
+
+        tester.verifyIssues(
+            "bonjour",
+            "with-suffix",
+            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar
+                .read("do something at the end")
+                .as("with-suffix");
+        }).not.toThrow()
+    });
+
+
 
     test("apply production rule",  () => {
         const tester = new Test();
