@@ -100,5 +100,13 @@ types by their name, or directly inline a new type definition.
 -   `aString()` creates a new string type, which you can customize
     using:
 
+    -   `aString().nonEmpty()` to  prevent using the empty string "".
+
     -   `aString().thatMatches(pattern: Regexp)`to ensure the value
         matches the given pattern.
+
+    -   `aString().startingWith(prefix: string)`to ensure the given string
+        starts with a specific prefix.
+
+    -   `aString().endingWith(suffix: string)`to ensure the given
+        string ends with a specific suffix.

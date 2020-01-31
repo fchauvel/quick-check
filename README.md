@@ -34,8 +34,8 @@ schema.define("person")
 We can now check whether the data we get from JSON or YAML file adhere
 to our schema.
 
-```typescript
-const fieContent = fs.readFileSync('./data.yaml', 'utf8');
+```typescript {highlight: [4]}
+const fileContent = fs.readFileSync('./data.yaml', 'utf8');
 const data = yaml.safeLoad(fileContents);
 try {
     const myTeam = schema.read(data).as("team");
@@ -85,10 +85,10 @@ console.log(myTeam.members[1].members[0].name);
       - [X] Is negative
       - [ ] CloseTo
     - [ ] Strings
-      - [ ] Not empty
+      - [X] Not empty
       - [X] Match a given pattern
-      - [ ] Start with prefix
-      - [ ] Ends with suffix
+      - [X] Start with prefix
+      - [X] Ends with suffix
       - [ ] Has length, at least x characters
       - [ ] Has length, at most x characters
     - [ ] Arrays

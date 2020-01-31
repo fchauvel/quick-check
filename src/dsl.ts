@@ -98,6 +98,35 @@ class StringBuilder extends TypeBuilder<ast.StringType> {
         return this;
     }
 
+    public nonEmpty(): StringBuilder {
+        this._constraints.push(
+            new ast.Constraint(
+                "Shall not be an empty string",
+                s => s !== ""
+            )
+        );
+        return this;
+    }
+
+    public startingWith(prefix: string): StringBuilder {
+        this._constraints.push(
+            new  ast.Constraint(
+                `Shall start with '${prefix}'`,
+                s => s.startsWith(prefix)
+            )
+        );
+        return this;
+    }
+
+    public endingWith(suffix: string): StringBuilder {
+        this._constraints.push(
+            new  ast.Constraint(
+                `Shall end with '${suffix}'`,
+                s => s.endsWith(suffix)
+            )
+        );
+        return this;
+    }
 
     public build(): ast.StringType {
         return new ast.StringType(this._constraints, this.converter);
