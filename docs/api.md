@@ -83,6 +83,18 @@ types by their name, or directly inline a new type definition.
     -   `aNumber().belowOrEqualTo(bound: number)` to ensure the value
         is below or equal to the given bound.
 
+    -   `aNumber().positive()` to ensure the value is above or equal
+        to zero.
+
+    -   `aNumber().strictlyPositive()` to ensure the value is strictly
+        above zero.
+
+    -   `aNumber().negative()` to ensure the value is below or equal
+        to zero.
+
+    -   `aNumber().strictlyNegative()` to ensure the value is strictly
+        below zero.
+
 ### String
 
 -   `aString()` creates a new string type, which you can customize

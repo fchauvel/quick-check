@@ -239,48 +239,50 @@ class NumberBuilder extends TypeBuilder<ast.Number> {
     }
 
     public strictlyAbove(bound: number): NumberBuilder {
-        this._constraints.push(
-            new ast.Constraint(
-                `Value should be strictly above ${bound}`,
-                v => v > bound
-            )
-        );
-        return this;
+        return this.check(
+            v => v > bound,
+            `Value should be strictly above ${bound}`);
     }
-
 
     public aboveOrEqualTo(bound: number): NumberBuilder {
-        this._constraints.push(
-            new ast.Constraint(
-                `Value should be above or equal to ${bound}`,
-                v => v >= bound
-            )
-        );
-        return this;
+        return this.check(
+            v => v >= bound,
+            `Value should be above or equal to ${bound}`);
     }
-
 
     public strictlyBelow(bound: number): NumberBuilder {
-        this._constraints.push(
-            new ast.Constraint(
-                `Value should be strictly below ${bound}`,
-                v => v < bound
-            )
-        );
-        return this;
+        return this.check(
+            v => v < bound,
+            `Value should be strictly below ${bound}`);
     }
-
 
     public belowOrEqualTo(bound: number): NumberBuilder {
-        this._constraints.push(
-            new ast.Constraint(
-                `Value should be below or equal to ${bound}`,
-                v => v <= bound
-            )
-        );
-        return this;
+        return this.check(
+            v => v <= bound,
+            `Value should be below or equal to ${bound}` );
     }
 
+    public positive(): NumberBuilder {
+        return this.aboveOrEqualTo(0);
+    }
+
+    public strictlyPositive(): NumberBuilder {
+        return this.strictlyAbove(0);
+    }
+
+    public negative(): NumberBuilder {
+        return this.belowOrEqualTo(0);
+    }
+
+    public strictlyNegative(): NumberBuilder {
+        return this.strictlyBelow(0);
+    }
+
+    private check(check: (n:number) => boolean,
+                  description: string): NumberBuilder {
+        this._constraints.push(new ast.Constraint(description, check));
+        return this;
+    }
 
     public build(): ast.Number {
         return new ast.Number(
