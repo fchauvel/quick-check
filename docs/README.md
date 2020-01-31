@@ -6,10 +6,10 @@
 [![Test Coverage](https://img.shields.io/codecov/c/github/fchauvel/quick-check)](https://codecov.io/gh/fchauvel/quick-check/)
 [![Code Grade](https://img.shields.io/codacy/grade/bba21bb40e6c48bc87e1b8c0517dc2fa.svg)](https://app.codacy.com/manual/fchauvel/quick/dashboard)
 
-Quick-check is small Javascript library to express JSON schema
-directly in the code, parse and convert objects into custom classes.
-
-Checkout the [documentation](https://fchauvel.github.io/quick-check).
+Quick-check is small Javascript library to [declare
+schema](./declaration.md) directly in the code, [validate
+data](./typechecking.md) and [convert](./convertion.md) objects into
+custom classes.
 
 ## Schema Declaration
 
@@ -29,14 +29,15 @@ schema.define("person")
         .with(aProperty("lastname").ofType("string")));
 ```
 
-## Type-checking
+## Data Validation
 
 We can now check whether the data we get from JSON or YAML file adhere
 to our schema.
 
 ```typescript
-const fieContent = fs.readFileSync('./data.yaml', 'utf8');
+const fileContent = fs.readFileSync('./data.yaml', 'utf8');
 const data = yaml.safeLoad(fileContents);
+
 try {
     const myTeam = schema.read(data).as("team");
 
@@ -45,7 +46,7 @@ try {
 }
 ```
 
-## Convertion Rules
+## Convertions
 
 We can also equip our type definitions with convertion rules to obtain
 objects instance of specific home-grown classes.

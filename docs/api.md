@@ -26,7 +26,7 @@ convert a JSON object with the fields `firstname`and `lastname` into a
 proper object using:
 
 ```typescript
-mySchema.apply((data) => {
+mySchema.on("person").apply((data) => {
     return new Person(data.firstname,
                       data.lastname);
 });
