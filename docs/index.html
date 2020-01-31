@@ -1,26 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>@fchauvel/quick-check - Internal DSL to check and convert JSON structures</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Internal DSL to check and convert JSON structures">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
-</head>
-<body>
-  <div id="app"></div>
-  <script>
-    window.$docsify = {
-	name: '@fchauvel/quick-check',
-	repo: 'https://github.com/fchauvel/quick-check',
-	loadSidebar: true,
-	alias: {
-	    '.*?/changelog': 'https://github.com/fchauvel/quick-check/raw/master/CHANGELOG.md'
-	}
-    }
-  </script>
-  <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
-  <script src="//unpkg.com/prismjs/components/prism-typescript.min.js"></script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Docs</title>
+    <link rel="stylesheet" href="https://unpkg.com/docute@4/dist/docute.css">
+  </head>
+  <body>
+    <div id="docute"></div>
+    <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
+    <script>
+      new Docute({
+          target: '#docute',
+	  title: "quick-check",
+	  nav: [
+	      {
+		  title: 'Home',
+		  link: '/'
+	      },
+	      {
+		  title: 'GitHub',
+		  link: 'https://github.com/fchauvel/quick-check'
+	      }
+	  ],
+	  sidebar: [
+	      {
+		  title: "How to Install ''quick-check'?",
+		  link: "./install.md"
+	      },
+	      {
+		  title: "How to ...",
+		  collapsable: true,
+		  children: [
+		      {
+			  title: "Declare a data schema?",
+			  link: "./declaration.md"
+		      },
+		      {
+			  title: "Validate foreign data?",
+			  link: "./typechecking.md"
+		      },
+		      {
+			  title: "Convert data?",
+			  link: "./convertion.md"
+		      }
+		  ]
+	      },
+	      {
+		  title: "Example: Team Hiearchy",
+		  link: "team.md"
+	      },
+	      {
+		  title: "API reference",
+		  link:  "api.md"
+	      },
+	      {
+		  title: "Change Log",
+		  link: "./changelog.md"  
+	      }
+	  ],
+	  routes: {
+	      "changelog.md": {
+		  title: "Change Log",
+		  content: 'https://github.com/fchauvel/quick-check/raw/master/CHANGELOG.md',
+		  markdown: true
+	      }
+	  },
+	  highlight: ['typescript', 'bash', 'shell-session', 'yaml', 'json']
+      })
+    </script>
+    </script src="https://unpkg.com/prismjs@1.19.0/components/prism-typescript.min.js" >
+  </body>
 </html>

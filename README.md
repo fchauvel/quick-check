@@ -29,7 +29,7 @@ schema.define("person")
         .with(aProperty("lastname").ofType("string")));
 ```
 
-## Type-checking
+## Validation
 
 We can now check whether the data we get from JSON or YAML file adhere
 to our schema.
@@ -45,7 +45,7 @@ try {
 }
 ```
 
-## Convertion Rules
+## Convertion
 
 We can also equip our type definitions with convertion rules to obtain
 objects instance of specific home-grown classes.
@@ -64,3 +64,36 @@ const myTeam = schema.read(data).as("team");
 console.log(myTeam.members[1].members[0].name);
 
 ```
+
+
+## Features
+
+- [X] Convertion
+- [ ] Validation
+    - [X] Booleans
+    - [ ] Integers
+      - [ ] even
+      - [ ] odd
+      - [ ] a multiple of
+      - [ ] a power of
+    - [ ] Numbers
+      - [X] Strictly greater than
+      - [X] Greater than
+      - [X] Strictly smaller than
+      - [X] Smaller than
+      - [ ] Is positive
+      - [ ] Is negative
+      - [ ] CloseTo
+    - [ ] Strings
+      - [ ] Not empty
+      - [X] Match a given pattern
+      - [ ] Start with prefix
+      - [ ] Ends with suffix
+      - [ ] Has length, at least x characters
+      - [ ] Has length, at most x characters
+    - [ ] Arrays
+      - [ ] Length check (at most)
+      - [ ] Length check (at least)
+      - [ ] Uniqueness of element
+    - [ ] Unions
+    - [ ] Enumerations

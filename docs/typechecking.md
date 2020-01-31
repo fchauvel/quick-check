@@ -1,39 +1,31 @@
-# Type-checking
+# Validation
 
-You can use quick-check to typecheck JSON object trees, that is to
-check that every object you get is as you expect. It is often useful
-to provide the user with meaningful error messages.
+You can use quick-check to validate object trees against a shema, that
+is to check that every object you get is as you expect. It is often
+useful to provide the user with meaningful error messages.
 
-For instance, we could define a simple JSON schema as follows:
+For instance, provided you've defined our [team
+schema](./declaration.md), we can now validate as follows. Note that
+we can set what data we expect but using the `as`function.
 
-```typescript
-import { Grammar } from "@fchauvel/quick-check";
-import { anArrayOf,
-         anObject,
-         aProperty,
-         aString,
-         eitherOf }  from "@fchauvel/quick-check";
+```typescript {highlight: [4]}
+const fileContent = fs.readFileSync('./data.json', 'utf8');
+const data = JSON.parse(fileContents);
+try {
+    const myTeam = schema.read(data).as("team");
 
-const schema = new Grammar();
-schema.define("person")
-    .as(anObject()
-        .with(aProperty("firstname")
-              .ofType("string")
-              .withDefault("Unknown"))
-        .with(aProperty("lastname").ofType("string")));
+} catch (report) {
+    console.log(report.toString());
 
-schema.define("team")
-    .as(anObject()
-        .with(aProperty("name").ofType("string"))
-        .with(aProperty("members")
-              .ofType(anArrayOf(eitherOf("person", "team")))));
+}
 ```
 
-Provided we defined the schema/grammar as above, we now type-check an
-existing structure as follows:
+For the sake of example, let us assume that the JSON file we loaded
+does not adhere exactly to our [schema](./declaration.md). For
+instance, that the first member has an extra attribute, as follows:
 
-```typescript
-const data = {
+```json {highlight: [6]}
+{
    name: "Team",
    members: [
      {
@@ -45,27 +37,19 @@ const data = {
         members: [
           {
              firstname: "James",
-             lastname: "Bond",
-  }
+             lastname: "Bond"
+          }
         ]
      }
    ]
 }
-
-try {
-    const myTeam = schema.read(data).as("team");
-
-} catch (report) {
-    console.log(report.toString());
-
-}
-
 ```
 
 The extra fields `points` that we added on the John Doe record, is
 detected and report as follows:
 
-```console
+```shell-session
+$ node example.js
   1. Error: 'NO MATCHING TYPE' at root/members/#0
      None of the possible type matches (person, team)
       - Assuming value is of type 'person':

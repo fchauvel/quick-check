@@ -48,7 +48,7 @@ schema.define("team")
 
 We can now type check some YAML data, which we read from a file:
 
-```typescript
+```typescript {highlight: [5]}
 const fieContent = fs.readFileSync('./data.yaml', 'utf8');
 const data = yaml.safeLoad(fileContents);
 
