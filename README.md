@@ -93,8 +93,8 @@ console.log(myTeam.members[1].members[0].name);
       - [ ] Has length, at most x characters
     - [ ] Arrays
       - [X] fixed length
-      - [ ] Length check (at most)
-      - [ ] Length check (at least)
+      - [X] Length check (at most)
+      - [X] Length check (at least)
       - [ ] Uniqueness of element
     - [X] Unions
     - [ ] Enumerations
