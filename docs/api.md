@@ -66,6 +66,9 @@ array,  which you can further constrain as follows:
 -   `anArrayOf(...).ofSizeAtMost(n: number)` to ensure the given array
     contains at most n elements.
 
+-  `anArrayOf(...).withUniqueItems()` to ensure that there is no
+   "duplicate" (i.e., two items that are `===` equivalent).
+
 
 ## Union Types
 

@@ -213,6 +213,22 @@ class ArrayBuilder extends TypeBuilder<ast.ArrayType> {
         );
     }
 
+    public withUniqueItems(): ArrayBuilder {
+        return this.check<Array<any>>(
+            a => {
+                for (const [i1, e1] of a.entries()) {
+                    for (const [i2, e2] of a.entries()) {
+                        if (i1 !== i2 && e1 === e2) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            },
+            "Item must be unique!"
+        );
+    }
+
     public build(): ast.ArrayType {
         return new ast.ArrayType(
             this._contentType.build(),
