@@ -199,6 +199,20 @@ class ArrayBuilder extends TypeBuilder<ast.ArrayType> {
             `Must have exactly ${count} entries (found {a.length})`);
     }
 
+    public ofSizeAtLeast(minimum: number): ArrayBuilder {
+        return this.check<Array<any>>(
+            a => a.length >= minimum,
+            `Must have at least ${minimum} entries`
+        );
+    }
+
+    public ofSizeAtMost(maximum: number): ArrayBuilder {
+        return this.check<Array<any>>(
+            a => a.length <= maximum,
+            `Must have at most ${maximum} entries`
+        );
+    }
+
     public build(): ast.ArrayType {
         return new ast.ArrayType(
             this._contentType.build(),

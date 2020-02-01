@@ -60,6 +60,13 @@ array,  which you can further constrain as follows:
 -   `anArrayOf(...).ofSize(n: number)` to ensure the given array
     contains exactly n elements.
 
+-   `anArrayOf(...).ofSizeAtLeast(n: number)` to ensure the
+    given array contains at least n elements.
+
+-   `anArrayOf(...).ofSizeAtMost(n: number)` to ensure the given array
+    contains at most n elements.
+
+
 ## Union Types
 
 The function `eitherOf(type1, type2, ...)` lets you define types as

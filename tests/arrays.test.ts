@@ -64,6 +64,42 @@ describe("A grammar expecting an array should", () => {
     });
 
 
+    test("Dectect arrays with too few entries", () => {
+        const tester = new Test();
+        tester.grammar.define("list-of-number")
+            .as(anArrayOf("number")
+                .ofSizeAtLeast(1));
+
+        tester.verifyIssues([], "list-of-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(()=> {
+            tester.grammar.read([1])
+                .as("list-of-number");
+            tester.grammar.read([1, 2, 3, 4])
+                .as("list-of-number");
+           }).not.toThrow();
+    });
+
+
+    test("Dectect arrays with too many entries", () => {
+        const tester = new Test();
+        tester.grammar.define("list-of-number")
+            .as(anArrayOf("number")
+                .ofSizeAtMost(3));
+
+        tester.verifyIssues([1, 2, 3, 4], "list-of-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(()=> {
+            tester.grammar.read([1, 2])
+                .as("list-of-number");
+            tester.grammar.read([1, 2, 3])
+                .as("list-of-number");
+           }).not.toThrow();
+    });
+
+
     test("modify arrays accordingly",  () => {
         const tester = new Test();
         tester.grammar.define("list-of-number")
