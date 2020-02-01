@@ -100,6 +100,22 @@ describe("A grammar expecting an array should", () => {
     });
 
 
+    test("Dectect arrays with non unique entries", () => {
+        const tester = new Test();
+        tester.grammar.define("list-of-unique")
+            .as(anArrayOf("number")
+                .withUniqueItems());
+
+        tester.verifyIssues([1, 2, 3, 2], "list-of-unique",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(()=> {
+            tester.grammar.read([1, 2, 3, 4])
+                .as("list-of-unique");
+        }).not.toThrow();
+    });
+
+
     test("modify arrays accordingly",  () => {
         const tester = new Test();
         tester.grammar.define("list-of-number")

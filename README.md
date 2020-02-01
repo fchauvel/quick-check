@@ -95,6 +95,6 @@ console.log(myTeam.members[1].members[0].name);
       - [X] fixed length
       - [X] Length check (at most)
       - [X] Length check (at least)
-      - [ ] Uniqueness of element
+      - [X] Uniqueness of element
     - [X] Unions
     - [ ] Enumerations
