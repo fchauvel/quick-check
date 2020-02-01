@@ -52,7 +52,13 @@ The function `aProperty()` let you create property that can be customized as fol
 ## Array Types
 
 The function `anArrayOf(type: Type)` let you define a new type of
-array.
+array,  which you can further constrain as follows:
+
+-   `anArrayOf(...).nonEmpty()` to ensure the given array include at
+    least one entry.
+
+-   `anArrayOf(...).ofSize(n: number)` to ensure the given array
+    contains exactly n elements.
 
 ## Union Types
 

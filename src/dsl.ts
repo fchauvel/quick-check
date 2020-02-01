@@ -193,9 +193,16 @@ class ArrayBuilder extends TypeBuilder<ast.ArrayType> {
         this._contentType = contentType;
     }
 
+    public ofSize(count: number): ArrayBuilder {
+        return this.check<Array<any>>(
+            a => a.length === count,
+            `Must have exactly ${count} entries (found {a.length})`);
+    }
+
     public build(): ast.ArrayType {
         return new ast.ArrayType(
             this._contentType.build(),
+            this._constraints,
             this.converter);
     }
 

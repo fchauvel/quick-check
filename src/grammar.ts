@@ -119,7 +119,14 @@ class Parser<T> implements ast.Visitor {
             results.push(this._path.value);
             this._path.exit();
         }
-        this._path.value = definition.convert(results);
+        const violatedConstraints = definition.approve(results);
+        if (violatedConstraints.length > 0)  {
+            this._report.validationError(this._path.toString(),
+                                         violatedConstraints,
+                                         results);
+        } else {
+            this._path.value = definition.convert(results);
+        }
     }
 
 

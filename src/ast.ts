@@ -89,10 +89,14 @@ export abstract class Type implements Visitable {
 
 export class ArrayType extends Type {
 
+    private _constraints: Constraint<Array<any>>[]
     private _contentType: Type;
 
-    constructor(contentType: Type, converter?: Converter) {
+    constructor(contentType: Type,
+                constraints: Constraint<Array<any>>[],
+                converter?: Converter) {
         super(converter);
+        this._constraints = constraints;
         this._contentType = contentType;
     }
 
@@ -102,6 +106,10 @@ export class ArrayType extends Type {
 
     public get contentType(): Type {
         return  this._contentType;
+    }
+
+    public approve(array: Array<any>): Constraint<Array<any>>[] {
+        return this._constraints.filter(c => c.isViolatedBy(array));
     }
 
     public accept(visitor: Visitor): void {
