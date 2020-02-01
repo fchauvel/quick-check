@@ -44,6 +44,26 @@ describe("A grammar expecting an array should", () => {
     });
 
 
+    test("Dectect arrays with wrong number of entries", () => {
+        const tester = new Test();
+        tester.grammar.define("list-of-number")
+            .as(anArrayOf("number")
+                .ofSize(5));
+
+        tester.verifyIssues([1, 2, 3], "list-of-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        tester.verifyIssues([1, 2, 3, 4, 5, 6], "list-of-number",
+                            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(()=> {
+            tester.grammar.read([1,2,3,4,5])
+                .as("list-of-number");
+        }).not.toThrow();
+
+    });
+
+
     test("modify arrays accordingly",  () => {
         const tester = new Test();
         tester.grammar.define("list-of-number")
