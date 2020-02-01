@@ -70,15 +70,22 @@ export type Converter = (data: any) => any;
 
 export abstract class Type implements Visitable {
 
+    private _constraints: Constraint<any>[];
     private _converter: Converter;
 
-    constructor(converter?: Converter) {
+    constructor(constraints: Constraint<any>[],
+                converter?: Converter) {
+        this._constraints = constraints;
         this._converter = converter || ((data: any): any => { return data; });
     }
 
     public abstract accept(visitor: Visitor): void;
 
     public abstract get name(): string;
+
+    public approve<T>(value: T): Constraint<T>[] {
+        return this._constraints.filter(c => c.isViolatedBy(value));
+    }
 
     public convert(data: any):  any {
         return this._converter(data);
@@ -89,14 +96,12 @@ export abstract class Type implements Visitable {
 
 export class ArrayType extends Type {
 
-    private _constraints: Constraint<Array<any>>[]
     private _contentType: Type;
 
     constructor(contentType: Type,
                 constraints: Constraint<Array<any>>[],
                 converter?: Converter) {
-        super(converter);
-        this._constraints = constraints;
+        super(constraints, converter);
         this._contentType = contentType;
     }
 
@@ -106,10 +111,6 @@ export class ArrayType extends Type {
 
     public get contentType(): Type {
         return  this._contentType;
-    }
-
-    public approve(array: Array<any>): Constraint<Array<any>>[] {
-        return this._constraints.filter(c => c.isViolatedBy(array));
     }
 
     public accept(visitor: Visitor): void {
@@ -124,7 +125,7 @@ export class Union extends Type {
     private _candidateTypes: Type[];
 
     constructor(candidateTypes: Type[], converter?: Converter) {
-        super(converter);
+        super([], converter);
         this._candidateTypes = candidateTypes;
     }
 
@@ -150,7 +151,7 @@ export class ObjectType extends Type {
     private _properties: Index<Property>;
 
     constructor (properties: Property[], converter?: Converter) {
-        super(converter);
+        super([], converter);
         this._properties = {};
         for  (const eachProperty of properties) {
             this._properties[eachProperty.name] = eachProperty;
@@ -185,7 +186,7 @@ export class Reference extends Type  {
     private _typeName: string;
 
     constructor (typeName: string) {
-        super(undefined);
+        super([], undefined);
         this._typeName = typeName;
     }
 
@@ -247,12 +248,8 @@ export class Property implements Visitable {
 
 export class StringType extends Type {
 
-    private _constraints: Constraint<string>[];
-
-
     constructor(constraints: Constraint<string>[], converter?: Converter) {
-        super(converter);
-        this._constraints = constraints;
+        super(constraints, converter);
     }
 
     public get name(): string {
@@ -263,10 +260,6 @@ export class StringType extends Type {
         return /bonjour/g;
     }
 
-    public approve(value: string): Constraint<string>[] {
-        return this._constraints.filter(c => c.isViolatedBy(value));
-    }
-
     public accept(visitor: Visitor): void {
         visitor.visitString(this);
     }
@@ -275,15 +268,8 @@ export class StringType extends Type {
 
 export class Number extends Type {
 
-    private _constraints: Constraint<number>[];
-
     constructor(constraints: Constraint<number>[], converter?: Converter) {
-        super(converter);
-        this._constraints = constraints;
-    }
-
-    public approve(value: number): Constraint<number>[] {
-        return this._constraints.filter(c => c.isViolatedBy(value));
+        super(constraints, converter);
     }
 
     public get name(): string {
@@ -300,7 +286,7 @@ export class Number extends Type {
 export class Boolean extends Type {
 
     constructor(converter?: Converter) {
-        super(converter);
+        super([], converter);
     }
 
     public get name(): string {
