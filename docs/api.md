@@ -14,7 +14,6 @@ You can define a new type using the syntax
 `mySchema.define("myNewType").as(...)`. The `as` function accepts an
 Object type, an Array type, a Union type, or any primitive types.
 
-
 ## Convertion Rules
 
 You can define convertion by using the syntax
@@ -32,7 +31,6 @@ mySchema.on("person").apply((data) => {
 });
 ```
 
-
 ## Object Types
 
 -   `anObject()` creates a new type of object. You can specify its fields using:
@@ -48,7 +46,6 @@ customized as follows:
 
 -   `aProperty().withDefault(v: any)` defines an optional property,
     whose default value will be the given default value.
-
 
 ## Array Types
 
@@ -67,9 +64,8 @@ array,  which you can further constrain as follows:
 -   `anArrayOf(...).ofSizeAtMost(n: number)` to ensure the given array
     contains at most n elements.
 
--  `anArrayOf(...).withUniqueItems()` to ensure that there is no
-   "duplicate" (i.e., two items that are `===` equivalent).
-
+-   `anArrayOf(...).withUniqueItems()` to ensure that there is no
+    "duplicate" (i.e., two items that are `===` equivalent).
 
 ## Union Types
 

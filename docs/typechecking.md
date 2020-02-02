@@ -8,7 +8,7 @@ For instance, provided you've defined our [team
 schema](./declaration.md), we can now validate as follows. Note that
 we can set what data we expect but using the `as`function.
 
-```typescript {highlight: [4]}
+```typescript {highlight: \[4]}
 const fileContent = fs.readFileSync('./data.json', 'utf8');
 const data = JSON.parse(fileContents);
 try {
@@ -24,7 +24,7 @@ For the sake of example, let us assume that the JSON file we loaded
 does not adhere exactly to our [schema](./declaration.md). For
 instance, that the first member has an extra attribute, as follows:
 
-```json {highlight: [6]}
+```json {highlight: \[6]}
 {
    name: "Team",
    members: [

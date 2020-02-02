@@ -6,7 +6,6 @@ teams made of either persons or other teams.
 
 ![alt text](./_images/team_class_diagram.png)
 
-
 ## Type-checking
 
 This says nothing on how the data could/should be serialized. We could
@@ -48,7 +47,7 @@ schema.define("team")
 
 We can now type check some YAML data, which we read from a file:
 
-```typescript {highlight: [5]}
+```typescript {highlight: \[5]}
 const fieContent = fs.readFileSync('./data.yaml', 'utf8');
 const data = yaml.safeLoad(fileContents);
 

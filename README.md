@@ -14,6 +14,7 @@ Checkout the [documentation](https://fchauvel.github.io/quick-check).
 ## Schema Declaration
 
 Quick-check let us declare data schema  in a readable manner that reduces the need for documentation.
+
 ```typescript
 const schema = new Grammar();
 schema.define("team")
@@ -34,7 +35,7 @@ schema.define("person")
 We can now check whether the data we get from JSON or YAML file adhere
 to our schema.
 
-```typescript {highlight: [4]}
+```typescript {highlight: \[4]}
 const fileContent = fs.readFileSync('./data.yaml', 'utf8');
 const data = yaml.safeLoad(fileContents);
 try {
@@ -65,36 +66,42 @@ console.log(myTeam.members[1].members[0].name);
 
 ```
 
-
 ## Features
 
-- [X] Convertion
-- [ ] Validation
-    - [X] Booleans
-    - [ ] Integers
-      - [X] even
-      - [X] odd
-      - [X] a multiple of
-      - [ ] a power of
-    - [ ] Numbers
-      - [X] Strictly greater than
-      - [X] Greater than
-      - [X] Strictly smaller than
-      - [X] Smaller than
-      - [X] Is positive
-      - [X] Is negative
-      - [ ] CloseTo
-    - [X] Strings
-      - [X] Not empty
-      - [X] Match a given pattern
-      - [X] Start with prefix
-      - [X] Ends with suffix
-      - [X] Has length, at least x characters
-      - [X] Has length, at most x characters
-    - [X] Arrays
-      - [X] fixed length
-      - [X] Length check (at most)
-      - [X] Length check (at least)
-      - [X] Uniqueness of element
-    - [X] Unions
-    - [ ] Enumerations
+-   [x] Convertion
+
+-   [ ] Validation
+    -   [x] Booleans
+
+    -   [ ] Integers
+        -   [x] even
+        -   [x] odd
+        -   [x] a multiple of
+        -   [ ] a power of
+
+    -   [ ] Numbers
+        -   [x] Strictly greater than
+        -   [x] Greater than
+        -   [x] Strictly smaller than
+        -   [x] Smaller than
+        -   [x] Is positive
+        -   [x] Is negative
+        -   [ ] CloseTo
+
+    -   [x] Strings
+        -   [x] Not empty
+        -   [x] Match a given pattern
+        -   [x] Start with prefix
+        -   [x] Ends with suffix
+        -   [x] Has length, at least x characters
+        -   [x] Has length, at most x characters
+
+    -   [x] Arrays
+        -   [x] fixed length
+        -   [x] Length check (at most)
+        -   [x] Length check (at least)
+        -   [x] Uniqueness of element
+
+    -   [x] Unions
+
+    -   [ ] Enumerations
