@@ -40,7 +40,8 @@ mySchema.on("person").apply((data) => {
     -   `anObject.with(aProperty("foo").ofType("string"))` defines a
         new property on previous object types.
 
-The function `aProperty()` let you create property that can be customized as follows:
+The function `aProperty()` let you create property that can be
+customized as follows:
 
 -   `aProperty().optional()` defines a property which may not be
     defined on the object
@@ -81,6 +82,23 @@ types by their name, or directly inline a new type definition.
 ### Boolean
 
 -   `aBoolean()` creates a new boolean type.
+
+### Integer
+
+-   `anInteger()` create a new integer type, which you can customize
+    using:
+
+    -   `anInteger().even()` ensures the given number is even.
+
+    -   `anInteger().odd()` ensures the given number is odd.
+
+    -   `anInteger().multipleOf(n: number)` ensures the given number
+        is a multiple of n.
+
+    -   `anInteger().powerOf(n: number)` ensures the given number is a
+        power of n.
+
+    -   All the functions defined for 'numbers' below.
 
 ### Number
 
@@ -126,3 +144,9 @@ types by their name, or directly inline a new type definition.
 
     -   `aString().endingWith(suffix: string)`to ensure the given
         string ends with a specific suffix.
+
+    -   `aString().ofLengthAtLeast(n: number)` to ensure the given
+        string is at least n-characters long.
+
+    -   `aString().ofLengthAtMost(n: number)` to ensure the given
+        string is at most n-characters long.

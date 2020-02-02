@@ -81,7 +81,7 @@ describe("A grammar expecting a string",  () => {
             tester.grammar
                 .read("start something here")
                 .as("with-prefix");
-        }).not.toThrow()
+        }).not.toThrow();
     });
 
 
@@ -99,7 +99,49 @@ describe("A grammar expecting a string",  () => {
             tester.grammar
                 .read("do something at the end")
                 .as("with-suffix");
-        }).not.toThrow()
+        }).not.toThrow();
+    });
+
+
+    test("report strings that are too short", () => {
+        const tester = new Test();
+        tester.grammar.define("minimum-length")
+            .as(aString().ofLengthAtLeast(5));
+
+        tester.verifyIssues(
+            "1234",
+            "minimum-length",
+            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar
+                .read("12345")
+                .as("minimum-length");
+            tester.grammar
+                .read("123456789")
+                .as("minimum-length");
+        }).not.toThrow();
+    });
+
+
+    test("report strings that are too long", () => {
+        const tester = new Test();
+        tester.grammar.define("maximum-length")
+            .as(aString().ofLengthAtMost(5));
+
+        tester.verifyIssues(
+            "1234567890",
+            "maximum-length",
+            [ [ ErrorCode.VALIDATION_ERROR, 1 ] ]);
+
+        expect(() => {
+            tester.grammar
+                .read("12345")
+                .as("maximum-length");
+            tester.grammar
+                .read("1234")
+                .as("maximum-length");
+        }).not.toThrow();
     });
 
 

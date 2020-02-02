@@ -29,7 +29,7 @@ abstract class TypeBuilder<T extends ast.Type> implements Builder<T> {
 
     public abstract build(): T;
 
-    protected check<T>(check: (n:T) => boolean,
+    protected check<T>(check: (n: T) => boolean,
                   description: string): this {
         this._constraints.push(new ast.Constraint<T>(description, check));
         return this;
@@ -115,6 +115,20 @@ class StringBuilder extends TypeBuilder<ast.StringType> {
         return this.check<string>(
             s => s.endsWith(suffix),
             `Shall end with '${suffix}'`
+        );
+    }
+
+    public ofLengthAtLeast(minimum: number): StringBuilder {
+        return this.check<string>(
+            s => s.length >= minimum,
+            `Must be at least ${minimum} character long`
+        );
+    }
+
+    public ofLengthAtMost(maximum: number): StringBuilder {
+        return this.check<string>(
+            s => s.length <= maximum,
+            `Must be at most ${maximum} character long`
         );
     }
 
@@ -327,6 +341,12 @@ class NumberBuilder extends TypeBuilder<ast.Number> {
         return this.strictlyBelow(0);
     }
 
+    public integer(): NumberBuilder {
+        return this.check<number>(
+            v => Number.isInteger(v),
+            "Value should be finite (i.e., an integer)"
+        );
+    }
 
     public build(): ast.Number {
         return new ast.Number(
@@ -338,6 +358,49 @@ class NumberBuilder extends TypeBuilder<ast.Number> {
 
 export function aNumber(): NumberBuilder {
     return new NumberBuilder();
+}
+
+
+class IntegerBuilder extends NumberBuilder {
+
+    constructor () {
+        super();
+        this.integer();
+    }
+
+    public even(): IntegerBuilder {
+        return this.check<number>(
+            n  => (n % 2) === 0,
+            "The integer value must be even"
+        );
+    }
+
+
+    public odd(): IntegerBuilder {
+        return this.check<number>(
+            n  => (n % 2) === 1,
+            "The integer value must be even"
+        );
+    }
+
+    public multipleOf(base: number): IntegerBuilder {
+        return this.check<number>(
+            n => (n % base) === 0,
+            `Must be a multiple of ${base}`
+        );
+    }
+
+    public powerOf(base: number): IntegerBuilder {
+        return this.check<number>(
+            n => Number.isInteger(Math.log(n) / Math.log(base)),
+            `Must be a power of ${base}`
+        );
+    }
+
+}
+
+export function anInteger(): IntegerBuilder {
+    return new IntegerBuilder();
 }
 
 
