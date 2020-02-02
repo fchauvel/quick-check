@@ -27,7 +27,7 @@ schema.on("team").apply(
 
 The `read(...).as("team")` statement now returns a "Team" object.
 
-```typescript {highlight: [4]}
+```typescript {highlight: \[4]}
 const fileContent = fs.readFileSync('./data.json', 'utf8');
 const data = JSON.parse(fileContents);
 try {

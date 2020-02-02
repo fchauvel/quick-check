@@ -14,6 +14,7 @@ custom classes.
 ## Schema Declaration
 
 Quick-check let us declare data schema  in a readable manner that reduces the need for documentation.
+
 ```typescript
 const schema = new Grammar();
 schema.define("team")
