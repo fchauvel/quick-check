@@ -9,7 +9,7 @@
 Quick-check is small Javascript library to express JSON schema
 directly in the code, parse and convert objects into custom classes.
 
-Checkout the [documentation](https://fchauvel.github.io/quick-check).
+Checkout the [documentation](https://fchauvel.github.io/quick-check/index.html).
 
 ## Schema Declaration
 
@@ -71,13 +71,14 @@ console.log(myTeam.members[1].members[0].name);
 -   [x] Convertion
 
 -   [ ] Validation
+
     -   [x] Booleans
 
     -   [ ] Integers
         -   [x] even
         -   [x] odd
         -   [x] a multiple of
-        -   [ ] a power of
+        -   [x] a power of
 
     -   [ ] Numbers
         -   [x] Strictly greater than

@@ -1,6 +1,6 @@
 {
     "name": "@fchauvel/quick-check",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "commit": null,
     "description": "Internal DSL to check and convert JSON structures",
     "main": "dist/",
@@ -30,7 +30,7 @@
     "bugs": {
         "url": "https://github.com/fchauvel/quick-check/issues"
     },
-    "homepage": "https://github.com/fchauvel/quick-check#readme",
+    "homepage": " https://fchauvel.github.io/quick-check/index.html",
     "devDependencies": {
         "@types/jest": "^24.9.0",
         "@typescript-eslint/eslint-plugin": "^2.17.0",

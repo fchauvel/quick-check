@@ -4,7 +4,7 @@ Let us assume we need to parse data describing people organized as
 teams. A team includes persons or smaller teams. By constrast, a
 person includes its lastname, and possibly its firstname.
 
-```typescript {highlight: \[8, '9-14', '16-20']}
+```typescript {highlight: [8, '9-14', '16-20']}
 import { Grammar } from "@fchauvel/quick-check";
 import { anArrayOf,
          anObject,

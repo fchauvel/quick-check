@@ -13,6 +13,7 @@
       new Docute({
           target: '#docute',
 	  title: "quick-check",
+	  editLinkBase: "https://github.com/fchauvel/quick-check/blob/master/docs",
 	  nav: [
 	      {
 		  title: 'Home',
@@ -56,14 +57,12 @@
 	      },
 	      {
 		  title: "Change Log",
-		  link: "./changelog.md"  
+		  link: "CHANGELOG.md"  
 	      }
 	  ],
 	  routes: {
-	      "changelog.md": {
-		  title: "Change Log",
-		  content: 'https://github.com/fchauvel/quick-check/raw/master/CHANGELOG.md',
-		  markdown: true
+	      "/CHANGELOG.md": {
+		  file: "https://github.com/fchauvel/quick-check/raw/master/CHANGELOG.md?sanitize=true"
 	      }
 	  },
 	  highlight: ['typescript', 'bash', 'shell-session', 'yaml', 'json']

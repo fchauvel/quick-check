@@ -2,19 +2,38 @@
 
 ## [Unreleased][unreleased]
 
--   Constraints on numbers, including:
+## [Quick-check v0.2.0][v0.2.0]
 
-    -   strictlyBelow(bound) to ensure the value remains strictly below
-        the given bound.
+-   [Online documentation][doc]
 
-    -   belowOrEqualTo(bound) to ensure the value remains below or
-        equal to the given bound.
+-   New constraints, including:
 
-    -   strictlyAbove(bound) to ensure the value remains strictly
-        greater than the given bound.
+    -   Integers
+        -   even
+        -   odd
+        -   multipleOf(base: number)
+        -   powerOf(base: number)
 
-    -   aboveOrEqualTo(bound) to ensure the value remains strictly
-        greater or equal to the given bound.
+    -   Numbers
+        -   strictlyAbove(bound: number)
+        -   aboveOrEqualTo(bound: number)
+        -   strictlyBelow(bound: number)
+        -   belowOrEqualTo(bound: number)
+        -   positive
+        -   negative
+
+    -   Strings
+        -   nonEmpty
+        -   startingWith(prefix: string)
+        -   endingWith(suffix: string)
+        -   ofLengthAtMost(maximum: number)
+        -   OfLengthAtLeast(minimum: number)
+
+    -   Arrays
+        -   ofSize(size: number)
+        -   ofSizeAtLeast(minimum: number)
+        -   ofSizeAtMost(maximum: number)
+        -   ofUniqueItems()
 
 ## [Quick-Check v0.1.0][v0.1.0]
 
@@ -36,6 +55,10 @@
 -   Optional production rules associated with strings, booleam value,
     numbers, array and objects.
 
-[unreleased]: https://github.com/fchauvel/quick-check/compare/v0.1.0..dev
+[doc]: https://fchauvel.github.io/quick-check/index.html
 
-[v0.1.0]: https://github.com/fchauvel/quick-check/compare/v0.1.0..dev
+[unreleased]: https://github.com/fchauvel/quick-check/compare/v0.2.0..dev
+
+[v0.2.0]: https://github.com/fchauvel/quick-check/compare/v0.2.0..v0.1.0
+
+[v0.1.0]: https://github.com/fchauvel/quick-check/v0.1.0
