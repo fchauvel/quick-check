@@ -208,6 +208,9 @@ export class Grammar {
         this._declarations["number"] =
             new dsl.TypeDeclaration("number")
             .as(dsl.aNumber());
+        this._declarations["integer"] =
+            new dsl.TypeDeclaration("integer")
+            .as(dsl.anInteger ());
         this._declarations["boolean"] =
             new dsl.TypeDeclaration("boolean")
             .as(dsl.aBoolean());

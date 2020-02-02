@@ -72,9 +72,9 @@ console.log(myTeam.members[1].members[0].name);
 - [ ] Validation
     - [X] Booleans
     - [ ] Integers
-      - [ ] even
-      - [ ] odd
-      - [ ] a multiple of
+      - [X] even
+      - [X] odd
+      - [X] a multiple of
       - [ ] a power of
     - [ ] Numbers
       - [X] Strictly greater than
@@ -84,14 +84,14 @@ console.log(myTeam.members[1].members[0].name);
       - [X] Is positive
       - [X] Is negative
       - [ ] CloseTo
-    - [ ] Strings
+    - [X] Strings
       - [X] Not empty
       - [X] Match a given pattern
       - [X] Start with prefix
       - [X] Ends with suffix
-      - [ ] Has length, at least x characters
-      - [ ] Has length, at most x characters
-    - [ ] Arrays
+      - [X] Has length, at least x characters
+      - [X] Has length, at most x characters
+    - [X] Arrays
       - [X] fixed length
       - [X] Length check (at most)
       - [X] Length check (at least)

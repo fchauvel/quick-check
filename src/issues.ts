@@ -331,7 +331,7 @@ export class Report {
 
     public validationError<T>(location: string,
                               violatedConstraints: ast.Constraint<T>[],
-                              found: T) {
+                              found: T): void {
         this._issues.push(
             new ValidationError<T>(location,
                                    violatedConstraints,
